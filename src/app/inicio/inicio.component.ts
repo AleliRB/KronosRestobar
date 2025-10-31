@@ -25,4 +25,15 @@ export class InicioComponent {
       this.productosDestacados = productos.slice(0, 4);
     });
   }
+  /**
+   * Agrega un producto al carrito
+   */
+  agregarAlCarrito(producto: Producto): void {
+    if (producto.stock > 0) {
+      this.carritoService.agregarProducto(producto, 1);
+      alert(`${producto.nombre} agregado al carrito`);
+    } else {
+      alert('Producto sin stock');
+    }
+  }
 }
