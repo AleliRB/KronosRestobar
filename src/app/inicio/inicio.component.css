@@ -112,3 +112,47 @@
 .feature-card:hover i {
   transform: scale(1.1);
 }
+/* Botones */
+.btn-danger {
+  background-color: #8B0000;
+  border: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-danger:hover:not(:disabled) {
+  background-color: #a00000;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(139, 0, 0, 0.3);
+}
+
+.btn-outline-light {
+  border-width: 2px;
+  font-weight: 500;
+}
+
+.btn-outline-danger {
+  color: #8B0000;
+  border-color: #8B0000;
+  border-width: 2px;
+  font-weight: 500;
+}
+
+.btn-outline-danger:hover {
+  background-color: #8B0000;
+  border-color: #8B0000;
+  color: white;
+}
+
+.btn-warning {
+  background-color: #ffc107;
+  border: none;
+  color: #000;
+  font-weight: 600;
+}
+
+.btn-warning:hover {
+  background-color: #ffb300;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(255, 193, 7, 0.4);
+}
