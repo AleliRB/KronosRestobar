@@ -50,3 +50,15 @@
   background-color: #8B0000;
   color: white;
 }
+/* Botón outline */
+.btn-outline-light {
+  border-width: 2px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-light:hover {
+  background-color: white;
+  color: #8B0000;
+  transform: translateY(-2px);
+}
