@@ -81,3 +81,13 @@
 .text-warning {
   color: #ffc107 !important;
 }
+/* Responsive */
+@media (max-width: 991px) {
+  .navbar-nav {
+    padding: 1rem 0;
+  }
+
+  .nav-link {
+    margin: 0.25rem 0;
+  }
+}
