@@ -35,3 +35,18 @@
   padding: 0.25rem 0.5rem;
   border-radius: 10px;
 }
+/* Dropdown */
+.dropdown-menu {
+  border: none;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.dropdown-item {
+  transition: all 0.3s ease;
+}
+
+.dropdown-item:hover {
+  background-color: #8B0000;
+  color: white;
+}
