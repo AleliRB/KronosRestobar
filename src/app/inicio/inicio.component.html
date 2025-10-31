@@ -24,6 +24,40 @@
       </h2>
       <p class="text-muted">Nuestras hamburguesas más populares</p>
     </div>
-    
+     <!-- Grid de Productos -->
+    <div class="row g-4">
+      <div class="col-12 col-sm-6 col-lg-3" *ngFor="let producto of productosDestacados">
+        <div class="card producto-card h-100 shadow-sm">
+          <div class="card-img-container">
+            <img 
+              [src]="producto.imagen" 
+              [alt]="producto.nombre"
+              class="card-img-top"
+              onerror="this.src='https://via.placeholder.com/300x200'"
+            >
+            <span class="badge-categoria bg-danger">{{ producto.categoria }}</span>
+          </div>
+
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title fw-bold">{{ producto.nombre }}</h5>
+            <p class="card-text text-muted small flex-grow-1">{{ producto.descripcion }}</p>
+
+            <div class="precios mb-3">
+              <strong class="text-danger fs-5">S/ {{ producto.precioSoles.toFixed(2) }}</strong>
+              <small class="text-success d-block">≈ $ {{ producto.precioDolares.toFixed(2) }} USD</small>
+            </div>
+
+            <button 
+              class="btn btn-danger w-100"
+              (click)="agregarAlCarrito(producto)"
+              [disabled]="producto.stock === 0"
+            >
+              <i class="fas fa-cart-plus me-2"></i>
+              {{ producto.stock === 0 ? 'Sin Stock' : 'Agregar al Carrito' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
      </div>
  </section>
