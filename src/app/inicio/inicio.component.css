@@ -156,3 +156,17 @@
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(255, 193, 7, 0.4);
 }
+/* Responsive */
+@media (max-width: 768px) {
+  .banner-hero {
+    height: 60vh;
+  }
+
+  .display-4 {
+    font-size: 2rem;
+  }
+
+  .card-img-container {
+    height: 180px;
+  }
+}
