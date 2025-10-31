@@ -88,3 +88,27 @@
   padding-top: 0.75rem;
   margin-bottom: 0.75rem;
 }
+/* Características */
+.caracteristicas {
+  background-color: #f8f9fa !important;
+}
+
+.feature-card {
+  background-color: white;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  height: 100%;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.feature-card i {
+  transition: transform 0.3s ease;
+}
+
+.feature-card:hover i {
+  transform: scale(1.1);
+}
