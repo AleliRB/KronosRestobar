@@ -52,4 +52,11 @@ loginForm: FormGroup;
       }
     }, 500);
   }
+  /**
+   * Verifica si un campo es inválido y ha sido tocado
+   */
+  campoInvalido(campo: string): boolean {
+    const control = this.loginForm.get(campo);
+    return !!(control && control.invalid && control.touched);
+  }
 }
