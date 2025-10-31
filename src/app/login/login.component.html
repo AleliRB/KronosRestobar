@@ -9,13 +9,32 @@
               <h2 class="fw-bold text-danger">BurgerIca</h2>
               <p class="text-muted">Inicia sesión para continuar</p>
             </div>
+            <!-- Formulario de Login -->
+            <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+                <!-- Usuario -->
+              <div class="mb-3">
+                <label for="usuario" class="form-label">Usuario</label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="fas fa-user"></i></span>
+                  <input 
+                    type="text" 
+                    class="form-control" 
+                    id="usuario"
+                    formControlName="usuario"
+                    [class.is-invalid]="campoInvalido('usuario')"
+                    placeholder="Ingresa tu usuario"
+                  >
+                </div>
+                <div class="invalid-feedback d-block" *ngIf="campoInvalido('usuario')">
+                  El usuario debe tener al menos 3 caracteres
+                </div>
+              </div>
 
 
 
 
 
-
-
+            </form>
             </div>
          </div>
        </div>
