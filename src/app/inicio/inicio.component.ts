@@ -1,11 +1,28 @@
-import { Component } from '@angular/core';
-
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
+import { ProductosService, Producto } from '../services/productos.service';
+import { CarritoService } from '../services/carrito.service';
 @Component({
   selector: 'app-inicio',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule, RouterLink],
   templateUrl: './inicio.component.html',
   styleUrl: './inicio.component.css'
 })
 export class InicioComponent {
+ productosDestacados: Producto[] = [];
 
+  constructor(
+    private productosService: ProductosService,
+    private carritoService: CarritoService
+  ) {}
+
+
+  ngOnInit(): void {
+    // Obtener los primeros 4 productos como destacados
+    this.productosService.productos$.subscribe(productos => {
+      this.productosDestacados = productos.slice(0, 4);
+    });
+  }
 }
