@@ -24,7 +24,8 @@
       </h2>
       <p class="text-muted">Nuestras hamburguesas más populares</p>
     </div>
-     <!-- Grid de Productos -->
+    <!-- Grid de Productos -->
+
     <div class="row g-4">
       <div class="col-12 col-sm-6 col-lg-3" *ngFor="let producto of productosDestacados">
         <div class="card producto-card h-100 shadow-sm">
@@ -59,5 +60,13 @@
         </div>
       </div>
     </div>
+
+    <!-- Botón Ver Todos -->
+    <div class="text-center mt-5">
+      <a routerLink="/productos" class="btn btn-outline-danger btn-lg">
+        <i class="fas fa-arrow-right me-2"></i>Ver Todos los Productos
+      </a>
+    </div>
+
      </div>
  </section>
