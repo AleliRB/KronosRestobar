@@ -29,6 +29,24 @@
                   El usuario debe tener al menos 3 caracteres
                 </div>
               </div>
+              <!-- Contraseña -->
+              <div class="mb-3">
+                <label for="contrasena" class="form-label">Contraseña</label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                  <input 
+                    type="password" 
+                    class="form-control" 
+                    id="contrasena"
+                    formControlName="contrasena"
+                    [class.is-invalid]="campoInvalido('contrasena')"
+                    placeholder="Ingresa tu contraseña"
+                  >
+                </div>
+                <div class="invalid-feedback d-block" *ngIf="campoInvalido('contrasena')">
+                  La contraseña debe tener al menos 6 caracteres
+                </div>
+              </div>
 
 
 
