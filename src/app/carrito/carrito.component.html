@@ -10,5 +10,23 @@
         <p class="text-muted">Revisa tus productos antes de generar la boleta</p>
       </div>
     </div>
+
+    <!-- Carrito Vacío -->
+    <div class="row" *ngIf="carritoVacio()">
+      <div class="col-12">
+        <div class="card text-center py-5">
+          <div class="card-body">
+            <i class="fas fa-shopping-cart fa-5x text-muted mb-3"></i>
+            <h3 class="text-muted">Tu carrito está vacío</h3>
+            <p class="text-muted">¡Agrega productos para comenzar tu pedido!</p>
+            <a routerLink="/productos" class="btn btn-danger mt-3">
+              <i class="fas fa-shopping-bag me-2"></i>
+              Ver Productos
+            </a>
+          </div>
+        </div>
+      </div>
+    </div> 
+    
     </div>
 </div>
