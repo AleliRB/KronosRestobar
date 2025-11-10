@@ -27,6 +27,149 @@
         </div>
       </div>
     </div> 
-    
+    <!-- Carrito con Productos -->
+    <div class="row" *ngIf="!carritoVacio()">
+      <!-- Lista de Productos -->
+      <div class="col-lg-8 mb-4">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table align-middle">
+                <thead>
+                  <tr>
+                    <th>Producto</th>
+                    <th>Precio</th>
+                    <th class="text-center">Cantidad</th>
+                    <th>Subtotal</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of items">
+                    <!-- Producto -->
+                    <td>
+                      <div class="d-flex align-items-center">
+                        <img 
+                          [src]="item.producto.imagen" 
+                          [alt]="item.producto.nombre"
+                          class="producto-img me-3"
+                        >
+                        <div>
+                          <h6 class="mb-0">{{ item.producto.nombre }}</h6>
+                          <small class="text-muted">{{ item.producto.categoria }}</small>
+                        </div>
+                      </div>
+                    </td>
+
+                    <!-- Precio -->
+                    <td>
+                      <div class="precio-dual">
+                        <strong class="text-danger">S/ {{ item.producto.precioSoles.toFixed(2) }}</strong>
+                        <small class="text-muted d-block">$ {{ item.producto.precioDolares.toFixed(2) }}</small>
+                      </div>
+                    </td>
+
+                    <!-- Cantidad -->
+                    <td>
+                      <div class="cantidad-control d-flex justify-content-center align-items-center">
+                        <button 
+                          class="btn btn-sm btn-outline-danger"
+                          (click)="disminuirCantidad(item.producto.id)"
+                        >
+                          <i class="fas fa-minus"></i>
+                        </button>
+                        <span class="mx-3 fw-bold">{{ item.cantidad }}</span>
+                        <button 
+                          class="btn btn-sm btn-outline-danger"
+                          (click)="aumentarCantidad(item.producto.id)"
+                        >
+                          <i class="fas fa-plus"></i>
+                        </button>
+                      </div>
+                    </td>
+
+                    <!-- Subtotal -->
+                    <td>
+                      <div class="precio-dual">
+                        <strong class="text-danger">S/ {{ item.subtotalSoles.toFixed(2) }}</strong>
+                        <small class="text-muted d-block">$ {{ item.subtotalDolares.toFixed(2) }}</small>
+                      </div>
+                    </td>
+
+                    <!-- Eliminar -->
+                    <td>
+                      <button 
+                        class="btn btn-sm btn-outline-danger"
+                        (click)="eliminarProducto(item.producto.id)"
+                        title="Eliminar producto"
+                      >
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Botón Vaciar Carrito -->
+            <div class="text-end mt-3">
+              <button class="btn btn-outline-danger" (click)="vaciarCarrito()">
+                <i class="fas fa-trash-alt me-2"></i>
+                Vaciar Carrito
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resumen del Pedido -->
+      <div class="col-lg-4">
+        <div class="card shadow-sm sticky-top" style="top: 20px;">
+          <div class="card-body">
+            <h5 class="card-title fw-bold mb-4">Resumen del Pedido</h5>
+
+            <!-- Cantidad de Productos -->
+            <div class="d-flex justify-content-between mb-3">
+              <span class="text-muted">Total de productos:</span>
+              <span class="fw-bold">{{ cantidadTotal }}</span>
+            </div>
+
+            <hr>
+
+            <!-- Total en Soles -->
+            <div class="d-flex justify-content-between mb-2">
+              <span class="text-muted">Total (Soles):</span>
+              <span class="fs-5 fw-bold text-danger">S/ {{ totalSoles.toFixed(2) }}</span>
+            </div>
+
+            <!-- Total en Dólares -->
+            <div class="d-flex justify-content-between mb-4">
+              <span class="text-muted">Total (Dólares):</span>
+              <span class="fs-6 fw-bold text-success">$ {{ totalDolares.toFixed(2) }}</span>
+            </div>
+
+            <hr>
+
+            <!-- Botón Generar Boleta -->
+            <button 
+              class="btn btn-danger w-100 mb-3"
+              (click)="irABoleta()"
+            >
+              <i class="fas fa-receipt me-2"></i>
+              Generar Boleta
+            </button>
+
+            <!-- Botón Seguir Comprando -->
+            <a 
+              routerLink="/productos" 
+              class="btn btn-outline-danger w-100"
+            >
+              <i class="fas fa-shopping-bag me-2"></i>
+              Seguir Comprando
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
     </div>
 </div>
