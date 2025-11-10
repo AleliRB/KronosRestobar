@@ -1,1 +1,191 @@
-<p>boleta works!</p>
+<div class="boleta-container py-5">
+  <div class="container">
+    
+    <!-- Formulario de Cliente (solo si no se generó la boleta) -->
+    <div class="row justify-content-center mb-4" *ngIf="!boletaGenerada">
+      <div class="col-lg-8">
+        <div class="card shadow-sm">
+          <div class="card-body p-4">
+            <h4 class="fw-bold text-danger mb-4">
+              <i class="fas fa-user me-2"></i>
+              Datos del Cliente
+            </h4>
+
+            <form [formGroup]="boletaForm">
+              <!-- DNI -->
+              <div class="mb-3">
+                <label for="dni" class="form-label">DNI del Cliente *</label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="fas fa-id-card"></i></span>
+                  <input 
+                    type="text" 
+                    class="form-control" 
+                    id="dni"
+                    formControlName="dni"
+                    (blur)="onDNIBlur()"
+                    placeholder="Ingresa el DNI (8 dígitos)"
+                    maxlength="8"
+                  >
+                  <button 
+                    class="btn btn-outline-secondary" 
+                    type="button"
+                    *ngIf="consultandoDNI"
+                    disabled
+                  >
+                    <span class="spinner-border spinner-border-sm"></span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Nombres -->
+              <div class="mb-3">
+                <label for="nombres" class="form-label">Nombres</label>
+                <input 
+                  type="text" 
+                  class="form-control bg-light" 
+                  id="nombres"
+                  formControlName="nombres"
+                  readonly
+                  placeholder="Se completará automáticamente"
+                >
+              </div>
+
+              <!-- Apellidos -->
+              <div class="mb-3">
+                <label for="apellidos" class="form-label">Apellidos</label>
+                <input 
+                  type="text" 
+                  class="form-control bg-light" 
+                  id="apellidos"
+                  formControlName="apellidos"
+                  readonly
+                  placeholder="Se completará automáticamente"
+                >
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Boleta Generada -->
+    <div class="row justify-content-center" id="boleta-imprimible">
+      <div class="col-lg-8">
+        <div class="card shadow-lg boleta-card">
+          <div class="card-body p-5">
+            
+            <!-- Header de la Boleta -->
+            <div class="text-center mb-4 boleta-header">
+              <h2 class="fw-bold text-danger mb-1">BurgerIca</h2>
+              <p class="text-muted mb-0">Calle Principal 123, Ica</p>
+              <p class="text-muted mb-0">Tel: (056) 123-456</p>
+              <hr class="my-3">
+              <h4 class="fw-bold">BOLETA DE VENTA</h4>
+              <p class="mb-0" *ngIf="boletaGenerada">
+                <strong>N°:</strong> {{ numeroBoleta }}<br>
+                <strong>Fecha:</strong> {{ fechaBoleta }}
+              </p>
+            </div>
+
+            <!-- Datos del Cliente -->
+            <div class="mb-4" *ngIf="boletaGenerada">
+              <h5 class="fw-bold mb-3">Datos del Cliente:</h5>
+              <div class="row">
+                <div class="col-md-4">
+                  <strong>DNI:</strong> {{ boletaForm.get('dni')?.value }}
+                </div>
+                <div class="col-md-8">
+                  <strong>Cliente:</strong> 
+                  {{ boletaForm.get('nombres')?.value }} 
+                  {{ boletaForm.get('apellidos')?.value }}
+                </div>
+              </div>
+            </div>
+
+            <!-- Detalle de Productos -->
+            <div class="mb-4">
+              <h5 class="fw-bold mb-3">Detalle de la Compra:</h5>
+              <div class="table-responsive">
+                <table class="table table-bordered">
+                  <thead class="table-light">
+                    <tr>
+                      <th>Producto</th>
+                      <th class="text-center">Cant.</th>
+                      <th class="text-end">P. Unit. (S/)</th>
+                      <th class="text-end">P. Unit. ($)</th>
+                      <th class="text-end">Subtotal (S/)</th>
+                      <th class="text-end">Subtotal ($)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let item of items">
+                      <td>{{ item.producto.nombre }}</td>
+                      <td class="text-center">{{ item.cantidad }}</td>
+                      <td class="text-end">S/ {{ item.producto.precioSoles.toFixed(2) }}</td>
+                      <td class="text-end">$ {{ item.producto.precioDolares.toFixed(2) }}</td>
+                      <td class="text-end fw-bold">S/ {{ item.subtotalSoles.toFixed(2) }}</td>
+                      <td class="text-end fw-bold">$ {{ item.subtotalDolares.toFixed(2) }}</td>
+                    </tr>
+                  </tbody>
+                  <tfoot class="table-light">
+                    <tr>
+                      <td colspan="4" class="text-end fw-bold">TOTAL:</td>
+                      <td class="text-end fw-bold text-danger fs-5">S/ {{ totalSoles.toFixed(2) }}</td>
+                      <td class="text-end fw-bold text-success fs-5">$ {{ totalDolares.toFixed(2) }}</td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+
+         
+
+            <!-- Botones de Acción (No se imprimen) -->
+            <div class="mt-4 no-print">
+              <div class="d-flex gap-2 justify-content-center flex-wrap">
+                <button 
+                  class="btn btn-danger"
+                  (click)="generarBoleta()"
+                  *ngIf="!boletaGenerada"
+                  [disabled]="boletaForm.invalid || consultandoDNI"
+                >
+                  <i class="fas fa-receipt me-2"></i>
+                  Generar Boleta
+                </button>
+
+                <button 
+                  class="btn btn-success"
+                  (click)="imprimirBoleta()"
+                  *ngIf="boletaGenerada"
+                >
+                  <i class="fas fa-print me-2"></i>
+                  Imprimir Boleta
+                </button>
+
+                <button 
+                  class="btn btn-primary"
+                  (click)="finalizarCompra()"
+                  *ngIf="boletaGenerada"
+                >
+                  <i class="fas fa-check me-2"></i>
+                  Finalizar Compra
+                </button>
+
+                <button 
+                  class="btn btn-outline-secondary"
+                  (click)="cancelar()"
+                  *ngIf="!boletaGenerada"
+                >
+                  <i class="fas fa-arrow-left me-2"></i>
+                  Volver al Carrito
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
