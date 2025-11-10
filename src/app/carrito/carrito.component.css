@@ -1,0 +1,71 @@
+.carrito-container {
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
+.card {
+  border: none;
+  border-radius: 10px;
+}
+
+.producto-img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.cantidad-control button {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.precio-dual {
+  line-height: 1.3;
+}
+
+.btn-danger {
+  background-color: #8B0000;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.btn-danger:hover {
+  background-color: #a00000;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(139, 0, 0, 0.3);
+}
+
+.btn-outline-danger {
+  color: #8B0000;
+  border-color: #8B0000;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-danger:hover {
+  background-color: #8B0000;
+  border-color: #8B0000;
+  color: white;
+}
+
+.table th {
+  border-top: none;
+  font-weight: 600;
+  color: #495057;
+}
+
+.sticky-top {
+  position: sticky;
+}
+
+@media (max-width: 991px) {
+  .sticky-top {
+    position: relative;
+    top: 0 !important;
+  }
+}
