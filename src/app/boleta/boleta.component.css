@@ -1,0 +1,71 @@
+.boleta-container {
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
+.boleta-card {
+  border: 2px solid #8B0000;
+  border-radius: 10px;
+}
+
+.boleta-header {
+  border-bottom: 2px dashed #dee2e6;
+  padding-bottom: 1rem;
+}
+
+.table {
+  margin-bottom: 0;
+}
+
+.table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+}
+
+.btn-danger {
+  background-color: #8B0000;
+  border: none;
+}
+
+.btn-danger:hover {
+  background-color: #a00000;
+}
+
+.form-control.bg-light {
+  background-color: #f8f9fa !important;
+  cursor: not-allowed;
+}
+
+/* Estilos para impresión */
+@media print {
+  .boleta-container {
+    background-color: white;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .card {
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  .boleta-card {
+    border: 2px solid #000 !important;
+  }
+
+  body {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .table {
+    border-collapse: collapse;
+  }
+
+  .table th,
+  .table td {
+    border: 1px solid #000 !important;
+  }
+}
