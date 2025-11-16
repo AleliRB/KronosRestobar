@@ -1,0 +1,27 @@
+name: CI Angular
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v3
+
+      - name: Instalar Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Instalar dependencias
+        run: npm install
+
+      - name: Compilar Angular
+        run: npm run build --if-present
+
+      - name: Ejecutar pruebas
+        run: npm test --if-present
