@@ -1,0 +1,82 @@
+<div class="login-container">
+  <div class="container">
+    <div class="row justify-content-center align-items-center min-vh-100">
+      <div class="col-12 col-md-6 col-lg-5">
+        <div class="card shadow-lg border-0">
+            <div class="card-body p-5">
+            <!-- Logo/Título -->
+            <div class="text-center mb-4">
+              <h2 class="fw-bold text-danger">BurgerIca</h2>
+              <p class="text-muted">Inicia sesión para continuar</p>
+            </div>
+            <!-- Formulario de Login -->
+            <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+                <!-- Usuario -->
+              <div class="mb-3">
+                <label for="usuario" class="form-label">Usuario</label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="fas fa-user"></i></span>
+                  <input 
+                    type="text" 
+                    class="form-control" 
+                    id="usuario"
+                    formControlName="usuario"
+                    [class.is-invalid]="campoInvalido('usuario')"
+                    placeholder="Ingresa tu usuario"
+                  >
+                </div>
+                <div class="invalid-feedback d-block" *ngIf="campoInvalido('usuario')">
+                  El usuario debe tener al menos 3 caracteres
+                </div>
+              </div>
+              <!-- Contraseña -->
+              <div class="mb-3">
+                <label for="contrasena" class="form-label">Contraseña</label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                  <input 
+                    type="password" 
+                    class="form-control" 
+                    id="contrasena"
+                    formControlName="contrasena"
+                    [class.is-invalid]="campoInvalido('contrasena')"
+                    placeholder="Ingresa tu contraseña"
+                  >
+                </div>
+                <div class="invalid-feedback d-block" *ngIf="campoInvalido('contrasena')">
+                  La contraseña debe tener al menos 6 caracteres
+                </div>
+              </div>    
+              <!-- Mensaje de Error -->
+              <div class="alert alert-danger" role="alert" *ngIf="mensajeError">
+                <i class="fas fa-exclamation-circle me-2"></i>
+                {{ mensajeError }}
+              </div>
+              <!-- Botón Login -->
+              <button 
+                type="submit" 
+                class="btn btn-danger w-100 mb-3"
+                [disabled]="cargando"
+              >
+                <span *ngIf="!cargando">
+                  <i class="fas fa-sign-in-alt me-2"></i>Iniciar Sesión
+                </span>
+                <span *ngIf="cargando">
+                  <span class="spinner-border spinner-border-sm me-2"></span>
+                  Iniciando...
+                </span>
+              </button>
+              <!-- Link a Registro -->
+              <div class="text-center">
+                <p class="mb-0">
+                  ¿No tienes cuenta? 
+                  <a routerLink="/registro" class="text-danger fw-bold">Regístrate aquí</a>
+                </p>
+              </div>
+            </form>
+            </div>
+         </div>
+       </div>
+    </div>
+ </div>
+</div>
