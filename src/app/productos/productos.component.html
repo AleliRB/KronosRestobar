@@ -1,1 +1,255 @@
-<p>productos works!</p>
+<div class="split-banner">
+    <!-- Sección Comida -->
+    <div class="split-section section-comida">
+      <div class="split-content">
+        <h2 class="split-title">Platos</h2>
+      </div>
+    </div>
+
+    <!-- Sección Bebidas -->
+    <div class="split-section section-bebidas">
+      <div class="split-content">
+        <h2 class="split-title">Bebidas</h2>
+      </div>
+    </div>
+
+    <!-- Sección Postres -->
+    <div class="split-section section-postres">
+      <div class="split-content">
+        <h2 class="split-title">Postres</h2>
+      </div>
+    </div>
+  </div>
+<div class="productos-container py-5">
+  <div class="container">
+    
+    <!-- Header -->
+    <div class="row mb-4">
+      <div class="col-md-8">
+        <h2 class="fw-bold text-dark">
+          <i class="fas fa-shopping-bag me-2"></i>
+          Nuestra Carta
+        </h2>
+        <p class="text-muted">Encuentra las mejores hamburguesas de Ica</p>
+      </div>
+      <div class="col-md-4 text-end">
+        <button class="btn btn-danger" (click)="toggleFormulario()">
+          <i class="fas fa-plus me-2"></i>
+          {{ mostrarFormulario ? 'Cerrar Formulario' : 'Nuevo Producto' }}
+        </button>
+      </div>
+    </div>
+
+    <!-- TABS DE CATEGORÍAS -->
+    <div class="tabs-container mb-4">
+      <div class="tabs-wrapper">
+        <button 
+          *ngFor="let categoria of categorias"
+          class="tab-btn" 
+          [class.active]="activeTab === categoria"
+          (click)="cambiarTab(categoria)">
+          {{ categoria }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Formulario CRUD -->
+    <div class="row mb-4" *ngIf="mostrarFormulario" id="formulario-producto">
+      <div class="col-12">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title fw-bold mb-4">
+              {{ modoEdicion ? 'Editar Producto' : 'Crear Nuevo Producto' }}
+            </h5>
+
+            <form [formGroup]="productoForm" (ngSubmit)="guardarProducto()">
+              <div class="row">
+                <!-- Nombre -->
+                <div class="col-md-6 mb-3">
+                  <label for="nombre" class="form-label">Nombre del Producto *</label>
+                  <input 
+                    type="text" 
+                    class="form-control" 
+                    id="nombre"
+                    formControlName="nombre"
+                    placeholder="Ej: Hamburguesa BBQ"
+                  >
+                </div>
+
+                <!-- Tipo de Categoría (Tabs) -->
+                <div class="col-md-6 mb-3">
+                  <label for="tipoCategoria" class="form-label">Tipo *</label>
+                  <select class="form-select" id="tipoCategoria" formControlName="tipoCategoria">
+                    <option value="Platos">Platos</option>
+                    <option value="Bebidas">Bebidas</option>
+                    <option value="Postres">Postres</option>
+                  </select>
+                </div>
+
+                <!-- Categoría -->
+                <div class="col-md-6 mb-3">
+                  <label for="categoria" class="form-label">Categoría *</label>
+                  <select class="form-select" id="categoria" formControlName="categoria">
+                    <option value="">Selecciona una categoría</option>
+                    <option value="Clásica">Clásica</option>
+                    <option value="Premium">Premium</option>
+                    <option value="Especial">Especial</option>
+                    <option value="Vegetariana">Vegetariana</option>
+                  </select>
+                </div>
+
+                <!-- Precio -->
+                <div class="col-md-6 mb-3">
+                  <label for="precioSoles" class="form-label">Precio (S/) *</label>
+                  <input 
+                    type="number" 
+                    class="form-control" 
+                    id="precioSoles"
+                    formControlName="precioSoles"
+                    placeholder="0.00"
+                    step="0.01"
+                    min="0"
+                  >
+                </div>
+
+                <!-- Descripción -->
+                <div class="col-12 mb-3">
+                  <label for="descripcion" class="form-label">Descripción *</label>
+                  <textarea 
+                    class="form-control" 
+                    id="descripcion"
+                    formControlName="descripcion"
+                    rows="2"
+                    placeholder="Describe el producto"
+                  ></textarea>
+                </div>
+
+                <!-- Imagen URL -->
+                <div class="col-md-8 mb-3">
+                  <label for="imagen" class="form-label">URL de la Imagen *</label>
+                  <input 
+                    type="text" 
+                    class="form-control" 
+                    id="imagen"
+                    formControlName="imagen"
+                    placeholder="https://ejemplo.com/imagen.jpg"
+                  >
+                </div>
+
+                <!-- Stock -->
+                <div class="col-md-4 mb-3">
+                  <label for="stock" class="form-label">Stock *</label>
+                  <input 
+                    type="number" 
+                    class="form-control" 
+                    id="stock"
+                    formControlName="stock"
+                    placeholder="0"
+                    min="0"
+                  >
+                </div>
+              </div>
+
+              <!-- Botones -->
+              <div class="d-flex gap-2">
+                <button 
+                  type="submit" 
+                  class="btn btn-success"
+                  [disabled]="productoForm.invalid"
+                >
+                  <i class="fas fa-save me-2"></i>
+                  {{ modoEdicion ? 'Actualizar' : 'Guardar' }}
+                </button>
+                <button 
+                  type="button" 
+                  class="btn btn-outline-secondary"
+                  (click)="cancelarEdicion()"
+                >
+                  <i class="fas fa-times me-2"></i>
+                  Cancelar
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lista de Productos Filtrados -->
+    <div class="row g-4">
+      <!-- Mensaje cuando no hay productos -->
+      <div class="col-12" *ngIf="productosFiltrados.length === 0">
+        <div class="alert alert-info text-center">
+          <i class="fas fa-info-circle me-2"></i>
+          No hay productos en la categoría "{{ activeTab }}". ¡Crea el primer producto!
+        </div>
+      </div>
+
+      <!-- Card de Producto -->
+      <div class="col-12 col-sm-6 col-md-4 col-lg-3" *ngFor="let producto of productosFiltrados">
+        <div class="card producto-card h-100 shadow-sm">
+          <!-- Imagen -->
+          <div class="card-img-container">
+            <img 
+              [src]="producto.imagen" 
+              [alt]="producto.nombre"
+              class="card-img-top"
+              onerror="this.src='https://via.placeholder.com/300x200?text=Imagen+No+Disponible'"
+            >
+            <span class="badge-categoria bg-dark">{{ producto.categoria }}</span>
+          </div>
+
+          <!-- Cuerpo -->
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title fw-bold">{{ producto.nombre }}</h5>
+            <p class="card-text text-muted small flex-grow-1">{{ producto.descripcion }}</p>
+
+            <!-- Precios -->
+            <div class="precios mb-3">
+              <div class="precio-soles">
+                <strong class="text-dark fs-5">S/ {{ producto.precioSoles.toFixed(2) }}</strong>
+              </div>
+              <div class="precio-dolares">
+                <small class="text-success">≈ $ {{ producto.precioDolares.toFixed(2) }} USD</small>
+              </div>
+            </div>
+
+            <!-- Stock -->
+            <div class="mb-3">
+              <span class="badge" [class.bg-success]="producto.stock > 10" [class.bg-warning]="producto.stock > 0 && producto.stock <= 10" [class.bg-danger]="producto.stock === 0">
+                <i class="fas fa-box me-1"></i>
+                Stock: {{ producto.stock }}
+              </span>
+            </div>
+
+            <!-- Botones de Acción -->
+            <div class="d-flex gap-2">
+              <button 
+                class="btn btn-danger btn-sm flex-grow-1"
+                (click)="agregarAlCarrito(producto)"
+                [disabled]="producto.stock === 0"
+              >
+                <i class="fas fa-cart-plus me-1"></i>
+                {{ producto.stock === 0 ? 'Sin Stock' : 'Agregar' }}
+              </button>
+              <button 
+                class="btn btn-outline-primary btn-sm"
+                (click)="editarProducto(producto)"
+                title="Editar"
+              >
+                <i class="fas fa-edit"></i>
+              </button>
+              <button 
+                class="btn btn-outline-danger btn-sm"
+                (click)="eliminarProducto(producto)"
+                title="Eliminar"
+              >
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
