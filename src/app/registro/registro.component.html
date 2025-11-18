@@ -1,0 +1,174 @@
+<div class="registro-container">
+  <div class="container">
+    <div class="row justify-content-center py-5">
+      <div class="col-12 col-md-8 col-lg-6">
+        <div class="card shadow-lg border-0">
+          <div class="card-body p-5">
+            <!-- Logo/Título -->
+            <div class="text-center mb-4">
+              <h2 class="fw-bold text-danger">Crear Cuenta</h2>
+              <p class="text-muted">Regístrate en BurgerIca</p>
+            </div>
+
+            <!-- Formulario de Registro -->
+            <form [formGroup]="registroForm" (ngSubmit)="onRegistrar()">
+              
+              <!-- DNI -->
+              <div class="mb-3">
+                <label for="dni" class="form-label">DNI *</label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="fas fa-id-card"></i></span>
+                  <input 
+                    type="text" 
+                    class="form-control" 
+                    id="dni"
+                    formControlName="dni"
+                    (blur)="onDNIBlur()"
+                    [class.is-invalid]="campoInvalido('dni')"
+                    placeholder="Ingresa tu DNI (8 dígitos)"
+                    maxlength="8"
+                  >
+                  <button 
+                    class="btn btn-outline-secondary" 
+                    type="button"
+                    *ngIf="consultandoDNI"
+                    disabled
+                  >
+                    <span class="spinner-border spinner-border-sm"></span>
+                  </button>
+                </div>
+                <div class="invalid-feedback d-block" *ngIf="campoInvalido('dni')">
+                  El DNI debe tener exactamente 8 dígitos
+                </div>
+              </div>
+
+              <!-- Nombres (autocompletado) -->
+              <div class="mb-3">
+                <label for="nombres" class="form-label">Nombres *</label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="fas fa-user"></i></span>
+                  <input 
+                    type="text" 
+                    class="form-control bg-light" 
+                    id="nombres"
+                    formControlName="nombres"
+                    readonly
+                    placeholder="Se completará automáticamente con RENIEC"
+                  >
+                </div>
+              </div>
+
+              <!-- Apellidos (autocompletado) -->
+              <div class="mb-3">
+                <label for="apellidos" class="form-label">Apellidos *</label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="fas fa-user"></i></span>
+                  <input 
+                    type="text" 
+                    class="form-control bg-light" 
+                    id="apellidos"
+                    formControlName="apellidos"
+                    readonly
+                    placeholder="Se completará automáticamente con RENIEC"
+                  >
+                </div>
+              </div>
+
+              <!-- Correo -->
+              <div class="mb-3">
+                <label for="correo" class="form-label">Correo Electrónico *</label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                  <input 
+                    type="email" 
+                    class="form-control" 
+                    id="correo"
+                    formControlName="correo"
+                    [class.is-invalid]="campoInvalido('correo')"
+                    placeholder="ejemplo@correo.com"
+                  >
+                </div>
+                <div class="invalid-feedback d-block" *ngIf="campoInvalido('correo')">
+                  Ingresa un correo electrónico válido
+                </div>
+              </div>
+
+              <!-- Usuario -->
+              <div class="mb-3">
+                <label for="usuario" class="form-label">Usuario *</label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="fas fa-user-circle"></i></span>
+                  <input 
+                    type="text" 
+                    class="form-control" 
+                    id="usuario"
+                    formControlName="usuario"
+                    [class.is-invalid]="campoInvalido('usuario')"
+                    placeholder="Elige un nombre de usuario"
+                  >
+                </div>
+                <div class="invalid-feedback d-block" *ngIf="campoInvalido('usuario')">
+                  El usuario debe tener al menos 3 caracteres
+                </div>
+              </div>
+
+              <!-- Contraseña -->
+              <div class="mb-3">
+                <label for="contrasena" class="form-label">Contraseña *</label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                  <input 
+                    type="password" 
+                    class="form-control" 
+                    id="contrasena"
+                    formControlName="contrasena"
+                    [class.is-invalid]="campoInvalido('contrasena')"
+                    placeholder="Mínimo 6 caracteres"
+                  >
+                </div>
+                <div class="invalid-feedback d-block" *ngIf="campoInvalido('contrasena')">
+                  La contraseña debe tener al menos 6 caracteres, incluyendo letras y números
+                </div>
+              </div>
+
+              <!-- Mensaje de Éxito -->
+              <div class="alert alert-success" role="alert" *ngIf="mensajeExito">
+                <i class="fas fa-check-circle me-2"></i>
+                {{ mensajeExito }}
+              </div>
+
+              <!-- Mensaje de Error -->
+              <div class="alert alert-danger" role="alert" *ngIf="mensajeError">
+                <i class="fas fa-exclamation-circle me-2"></i>
+                {{ mensajeError }}
+              </div>
+
+              <!-- Botón Registrar -->
+              <button 
+                type="submit" 
+                class="btn btn-danger w-100 mb-3"
+                [disabled]="cargando || consultandoDNI"
+              >
+                <span *ngIf="!cargando">
+                  <i class="fas fa-user-plus me-2"></i>Registrarse
+                </span>
+                <span *ngIf="cargando">
+                  <span class="spinner-border spinner-border-sm me-2"></span>
+                  Registrando...
+                </span>
+              </button>
+
+              <!-- Link a Login -->
+              <div class="text-center">
+                <p class="mb-0">
+                  ¿Ya tienes cuenta? 
+                  <a routerLink="/login" class="text-danger fw-bold">Inicia sesión aquí</a>
+                </p>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
