@@ -30,26 +30,26 @@
 }
 
 .btn-danger {
-  background-color: #8B0000;
+  background-color: #0D2036;
   border: none;
   transition: all 0.3s ease;
 }
 
 .btn-danger:hover {
-  background-color: #a00000;
+  background-color: #11304A; /* AZUL HOVER */
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(139, 0, 0, 0.3);
 }
 
 .btn-outline-danger {
-  color: #8B0000;
-  border-color: #8B0000;
+  color: #0D2036;
+  border-color: #0D2036;
   transition: all 0.3s ease;
 }
 
 .btn-outline-danger:hover {
-  background-color: #8B0000;
-  border-color: #8B0000;
+  background-color: #11304A; /* AZUL HOVER */
+  border-color: #0D2036;
   color: white;
 }
 

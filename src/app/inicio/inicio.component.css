@@ -1,6 +1,6 @@
 /* Banner Hero */
 .banner-hero {
-  background: linear-gradient(rgba(139, 0, 0, 0.7), rgba(70, 0, 0, 0.8)), 
+  background: linear-gradient(rgba(36, 36, 36, 0.481), rgba(70, 0, 0, 0.8)), 
               url('https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=1200') center/cover;
   height: 70vh;
   position: relative;
@@ -114,14 +114,14 @@
 }
 /* Botones */
 .btn-danger {
-  background-color: #8B0000;
+  background-color: #000000;
   border: none;
   font-weight: 500;
   transition: all 0.3s ease;
 }
 
 .btn-danger:hover:not(:disabled) {
-  background-color: #a00000;
+  background-color: #000000;
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(139, 0, 0, 0.3);
 }
@@ -132,15 +132,15 @@
 }
 
 .btn-outline-danger {
-  color: #8B0000;
-  border-color: #8B0000;
+  color: #ffffff;
+  border-color: #000000;
   border-width: 2px;
   font-weight: 500;
 }
 
 .btn-outline-danger:hover {
-  background-color: #8B0000;
-  border-color: #8B0000;
+  background-color: #000000;
+  border-color: #ffffff;
   color: white;
 }
 
@@ -172,7 +172,7 @@
 }
 /* Banner Secundario */
 .banner-secundario {
-  background: linear-gradient(135deg, #8B0000 0%, #a00000 100%);
+  background: linear-gradient(135deg, #0D2036  0%, #11304A 100%);
   padding: 5rem 0;
   position: relative;
   overflow: hidden;

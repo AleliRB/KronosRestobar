@@ -4,7 +4,7 @@
 }
 
 .boleta-card {
-  border: 2px solid #8B0000;
+  border: 2px solid #0D2036;
   border-radius: 10px;
 }
 
@@ -23,12 +23,12 @@
 }
 
 .btn-danger {
-  background-color: #8B0000;
+  background-color: #0D2036;
   border: none;
 }
 
 .btn-danger:hover {
-  background-color: #a00000;
+  background-color: #11304A; /* AZUL HOVER */
 }
 
 .form-control.bg-light {

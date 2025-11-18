@@ -1,5 +1,5 @@
 .registro-container {
-  background: linear-gradient(135deg, #8B0000 0%, #460000 100%);
+  background: linear-gradient(135deg,  #0D2036 0%,  #11304A 100%);
   min-height: 100vh;
 }
 
@@ -22,7 +22,7 @@
 }
 
 .form-control:focus {
-  border-color: #dc3545;
+  border-color:  #11304A;
   box-shadow: none;
 }
 
@@ -32,7 +32,7 @@
 }
 
 .btn-danger {
-  background-color: #8B0000;
+  background-color:  #11304A;
   border: none;
   padding: 12px;
   font-weight: 500;
@@ -40,7 +40,7 @@
 }
 
 .btn-danger:hover {
-  background-color: #a00000;
+  background-color:  #11304A;
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(139, 0, 0, 0.3);
 }
