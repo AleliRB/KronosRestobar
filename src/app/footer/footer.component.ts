@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
-import { CarritoService } from './services/carrito.service';
-import { AuthService, Usuario } from './services/auth.service';
+import { CarritoService } from '../services/carrito.service';
+import { AuthService, Usuario } from '../services/auth.service';
 import { Router } from '@angular/router';
 @Component({
   selector: 'app-footer',

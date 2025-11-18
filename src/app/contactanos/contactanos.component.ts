@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
 import { ReactiveFormsModule,FormControl,FormGroup } from '@angular/forms';
+import { FooterComponent } from "../footer/footer.component";
+import { HeaderComponent } from "../header/header.component";
 @Component({
   selector: 'app-contactanos',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, FooterComponent, HeaderComponent],
   templateUrl: './contactanos.component.html',
   styleUrl: './contactanos.component.css'
 })

@@ -4,10 +4,12 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { Router } from '@angular/router';
 import { CarritoService, ItemCarrito } from '../services/carrito.service';
 import { ReniecService, ReniecResponse } from '../services/reniec.service';
+import { FooterComponent } from "../footer/footer.component";
+import { HeaderComponent } from "../header/header.component";
 @Component({
   selector: 'app-boleta',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FooterComponent, HeaderComponent],
   templateUrl: './boleta.component.html',
   styleUrl: './boleta.component.css'
 })

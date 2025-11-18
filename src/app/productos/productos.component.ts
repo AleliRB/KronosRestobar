@@ -3,11 +3,13 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ProductosService, Producto } from '../services/productos.service';
 import { CarritoService } from '../services/carrito.service';
+import { FooterComponent } from "../footer/footer.component";
+import { HeaderComponent } from "../header/header.component";
 
 @Component({
   selector: 'app-productos',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FooterComponent, HeaderComponent],
   templateUrl: './productos.component.html',
   styleUrls: ['./productos.component.css']
 })

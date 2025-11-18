@@ -3,10 +3,12 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ProductosService, Producto } from '../services/productos.service';
 import { CarritoService } from '../services/carrito.service';
+import { FooterComponent } from "../footer/footer.component";
+import { HeaderComponent } from "../header/header.component";
 @Component({
   selector: 'app-inicio',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, FooterComponent, HeaderComponent],
   templateUrl: './inicio.component.html',
   styleUrl: './inicio.component.css'
 })
