@@ -40,4 +40,5 @@ jobs:
           action: "upload"
           app_location: "/"                       # raíz del proyecto
           api_location: ""                        # si no tienes API
-          output_location: "dist/restobar-kronos" # carpeta generada por Angular
+          output_location: "dist/restobar-kronos/browser"
+ # carpeta generada por Angular
