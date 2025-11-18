@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { CarritoService } from '../services/carrito.service';
 import { AuthService, Usuario } from '../services/auth.service';
 import { Router } from '@angular/router';
 @Component({
   selector: 'app-footer',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [CommonModule, ],
   templateUrl: './footer.component.html',
   styleUrl: './footer.component.css'
 })
