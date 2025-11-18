@@ -1,0 +1,37 @@
+name: 🚀 Entrega Continua Angular en Windows
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: windows-latest
+
+    steps:
+      - name: 📥 Clonar repositorio
+        uses: actions/checkout@v4
+
+      - name: 🧰 Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: 📦 Instalar dependencias
+        run: npm install
+
+      - name: 🔨 Build Angular
+        run: npm run build --prod
+
+      - name: 🧪 Ejecutar pruebas (opcional)
+        run: echo "Simulando pruebas automáticas en Windows..."
+
+      - name: 🗂️ Preparar archivos para despliegue
+        run: |
+          echo "Copiando archivos de dist/browser a C:\deploy"
+          mkdir C:\deploy
+          xcopy /E /I dist\restobar-kronos\browser\* C:\deploy\
+
+      - name: ✅ Confirmar despliegue
+        run: echo "Despliegue Angular completado exitosamente en Windows 🚀"
