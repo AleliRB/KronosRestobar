@@ -8,6 +8,7 @@ import { BoletaComponent } from './boleta/boleta.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { RegistroComponent } from './registro/registro.component';
 
+
 export const routes: Routes = [{
         path: '',
         component: InicioComponent
@@ -25,10 +26,7 @@ export const routes: Routes = [{
         path: 'carrito',
         component: CarritoComponent
     },
-      {
-        path: 'registro',
-        component: RegistroComponent
-    },
+   
     {
         path: 'boleta',
         component: BoletaComponent
@@ -36,6 +34,10 @@ export const routes: Routes = [{
     {
         path: 'conocenos',
         component: ConocenosComponent
+    },
+    {
+    path:'registro',
+    component:RegistroComponent
     },
   
  
