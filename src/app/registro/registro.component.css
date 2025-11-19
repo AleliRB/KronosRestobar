@@ -42,7 +42,7 @@
 .btn-danger:hover {
   background-color:  #11304A;
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(139, 0, 0, 0.3);
+  box-shadow: 0 4px 8px #11304A;
 }
 
 .btn-danger:disabled {
