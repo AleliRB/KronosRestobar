@@ -28,21 +28,21 @@ html {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #8B0000;
+  background: #11304A;
   border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #a00000;
+  background: #11304A;
 }
 
 /* Utilidades de texto */
 .text-danger {
-  color: #8B0000 !important;
+  color: #11304A !important;
 }
 
 .bg-danger {
-  background-color: #8B0000 !important;
+  background-color: #11304A !important;
 }
 
 /* Links */
@@ -81,7 +81,7 @@ a {
 
 .form-control:focus,
 .form-select:focus {
-  border-color: #8B0000;
+  border-color: #11304A;
   box-shadow: 0 0 0 0.2rem rgba(139, 0, 0, 0.25);
 }
 
