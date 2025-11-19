@@ -6,16 +6,24 @@ import { AuthService } from '../services/auth.service';
 import { ReniecService } from '../services/reniec.service';
 import { FooterComponent } from "../footer/footer.component";
 import { HeaderComponent } from "../header/header.component";
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-registro',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, FooterComponent, HeaderComponent],
+ imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterLink,
+    FooterComponent,
+    HeaderComponent,
+    HttpClientModule  // ← OBLIGATORIO
+  ],
   templateUrl: './registro.component.html',
   styleUrl: './registro.component.css'
 })
 export class RegistroComponent {
- registroForm: FormGroup;
+  registroForm: FormGroup;
   mensajeError: string = '';
   mensajeExito: string = '';
   cargando: boolean = false;
