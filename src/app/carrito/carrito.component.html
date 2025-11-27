@@ -1,7 +1,7 @@
 <app-header></app-header>
 <div class="carrito-container py-5">
-    <div class="container">
-        <!-- Header -->
+  <div class="container">
+    <!-- Header -->
     <div class="row mb-4">
       <div class="col-12">
         <h2 class="fw-bold text-danger">
@@ -27,7 +27,8 @@
           </div>
         </div>
       </div>
-    </div> 
+    </div>
+
     <!-- Carrito con Productos -->
     <div class="row" *ngIf="!carritoVacio()">
       <!-- Lista de Productos -->
@@ -123,9 +124,9 @@
         </div>
       </div>
 
-      <!-- Resumen del Pedido -->
+      <!-- Resumen del Pedido - STICKY ARREGLADO -->
       <div class="col-lg-4">
-        <div class="card shadow-sm sticky-top" style="top: 20px;">
+        <div class="card shadow-sm resumen-sticky">
           <div class="card-body">
             <h5 class="card-title fw-bold mb-4">Resumen del Pedido</h5>
 
@@ -157,7 +158,7 @@
               (click)="irABoleta()"
             >
               <i class="fas fa-receipt me-2"></i>
-              Generar Boleta
+              Continuar con el Pago
             </button>
 
             <!-- Botón Seguir Comprando -->
@@ -172,6 +173,6 @@
         </div>
       </div>
     </div>
-    </div>
+  </div>
 </div>
 <app-footer></app-footer>

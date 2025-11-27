@@ -1,0 +1,311 @@
+<app-header></app-header>
+<div class="perfil-container py-5">
+  <div class="container">
+    
+    <!-- Header -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <h2 class="fw-bold text-danger">
+          <i class="fas fa-user-circle me-2"></i>
+          Mi Perfil
+        </h2>
+        <p class="text-muted">Administra tu información personal, tarjetas y pedidos</p>
+      </div>
+    </div>
+
+    <!-- Tabs de navegación -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <ul class="nav nav-pills nav-fill">
+          <li class="nav-item">
+            <a 
+              class="nav-link"
+              [class.active]="vistaActual === 'datos'"
+              (click)="cambiarVista('datos')"
+            >
+              <i class="fas fa-user me-2"></i>Mis Datos
+            </a>
+          </li>
+          <li class="nav-item">
+            <a 
+              class="nav-link"
+              [class.active]="vistaActual === 'tarjetas'"
+              (click)="cambiarVista('tarjetas')"
+            >
+              <i class="fas fa-credit-card me-2"></i>Mis Tarjetas
+            </a>
+          </li>
+          <li class="nav-item">
+            <a 
+              class="nav-link"
+              [class.active]="vistaActual === 'pedidos'"
+              (click)="cambiarVista('pedidos')"
+            >
+              <i class="fas fa-shopping-bag me-2"></i>Mis Pedidos
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- VISTA: MIS DATOS -->
+    <div class="row" *ngIf="vistaActual === 'datos'">
+      <div class="col-lg-8 mx-auto">
+        <div class="card shadow-sm">
+          <div class="card-body p-4">
+            <h4 class="fw-bold mb-4">Información Personal</h4>
+            
+            <div class="row mb-3">
+              <div class="col-md-4">
+                <strong class="text-muted">DNI:</strong>
+              </div>
+              <div class="col-md-8">
+                {{ usuarioActual?.dni }}
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-md-4">
+                <strong class="text-muted">Nombres:</strong>
+              </div>
+              <div class="col-md-8">
+                {{ usuarioActual?.nombres }}
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-md-4">
+                <strong class="text-muted">Apellidos:</strong>
+              </div>
+              <div class="col-md-8">
+                {{ usuarioActual?.apellidos }}
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-md-4">
+                <strong class="text-muted">Correo:</strong>
+              </div>
+              <div class="col-md-8">
+                {{ usuarioActual?.correo }}
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-md-4">
+                <strong class="text-muted">Usuario:</strong>
+              </div>
+              <div class="col-md-8">
+                {{ usuarioActual?.usuario }}
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-4">
+                <strong class="text-muted">Fecha de Registro:</strong>
+              </div>
+              <div class="col-md-8">
+                {{ usuarioActual?.fechaRegistro | date:'dd/MM/yyyy' }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VISTA: MIS TARJETAS -->
+    <div class="row" *ngIf="vistaActual === 'tarjetas'">
+      <div class="col-lg-10 mx-auto">
+        
+        <!-- Botón agregar tarjeta -->
+        <div class="text-end mb-4">
+          <button class="btn btn-danger" (click)="toggleFormTarjeta()">
+            <i class="fas fa-plus me-2"></i>
+            {{ mostrarFormTarjeta ? 'Cancelar' : 'Agregar Tarjeta' }}
+          </button>
+        </div>
+
+        <!-- Formulario agregar tarjeta -->
+        <div class="card shadow-sm mb-4" *ngIf="mostrarFormTarjeta">
+          <div class="card-body p-4">
+            <h5 class="fw-bold mb-4">Nueva Tarjeta</h5>
+            
+            <form [formGroup]="tarjetaForm" (ngSubmit)="agregarTarjeta()">
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Número de Tarjeta *</label>
+                  <input 
+                    type="text" 
+                    class="form-control"
+                    formControlName="numeroTarjeta"
+                    placeholder="1234 5678 9012 3456"
+                    maxlength="16"
+                  >
+                  <small class="text-muted">16 dígitos</small>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Titular *</label>
+                  <input 
+                    type="text" 
+                    class="form-control"
+                    formControlName="titular"
+                    placeholder="Como aparece en la tarjeta"
+                  >
+                </div>
+
+                <div class="col-md-4 mb-3">
+                  <label class="form-label">Tipo *</label>
+                  <select class="form-select" formControlName="tipo">
+                    <option value="debito">Débito</option>
+                    <option value="credito">Crédito</option>
+                  </select>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                  <label class="form-label">Vencimiento *</label>
+                  <input 
+                    type="text" 
+                    class="form-control"
+                    formControlName="vencimiento"
+                    placeholder="MM/YY"
+                    maxlength="5"
+                    (input)="formatearVencimiento($event)"
+                  >
+                </div>
+
+                <div class="col-md-4 mb-3">
+                  <label class="form-label">CVV *</label>
+                  <input 
+                    type="password" 
+                    class="form-control"
+                    formControlName="cvv"
+                    placeholder="123"
+                    maxlength="4"
+                  >
+                </div>
+              </div>
+
+              <button 
+                type="submit" 
+                class="btn btn-success"
+                [disabled]="tarjetaForm.invalid"
+              >
+                <i class="fas fa-save me-2"></i>Guardar Tarjeta
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Lista de tarjetas -->
+        <div class="row g-3">
+          <div class="col-12" *ngIf="tarjetas.length === 0">
+            <div class="alert alert-info text-center">
+              <i class="fas fa-credit-card fa-3x mb-3 d-block"></i>
+              No tienes tarjetas guardadas. Agrega una para compras más rápidas.
+            </div>
+          </div>
+
+          <div class="col-md-6" *ngFor="let tarjeta of tarjetas">
+            <div class="card tarjeta-card h-100" [class.tarjeta-principal]="tarjeta.esPrincipal">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                  <div>
+                    <h6 class="mb-0">
+                      <i class="fas fa-credit-card me-2"></i>
+                      {{ tarjeta.tipo === 'debito' ? 'Débito' : 'Crédito' }}
+                    </h6>
+                  </div>
+                  <span class="badge bg-success" *ngIf="tarjeta.esPrincipal">Principal</span>
+                </div>
+
+                <p class="h5 mb-2">•••• •••• •••• {{ tarjeta.numeroTarjeta }}</p>
+                <p class="mb-2"><strong>{{ tarjeta.titular }}</strong></p>
+                <p class="text-muted small mb-3">Vence: {{ tarjeta.vencimiento }}</p>
+
+                <div class="d-flex gap-2">
+                  <button 
+                    class="btn btn-sm btn-outline-primary"
+                    (click)="establecerPrincipal(tarjeta.id)"
+                    *ngIf="!tarjeta.esPrincipal"
+                  >
+                    Hacer Principal
+                  </button>
+                  <button 
+                    class="btn btn-sm btn-outline-danger"
+                    (click)="eliminarTarjeta(tarjeta.id)"
+                  >
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- VISTA: MIS PEDIDOS -->
+    <div class="row" *ngIf="vistaActual === 'pedidos'">
+      <div class="col-lg-10 mx-auto">
+        
+        <div class="alert alert-info" *ngIf="misPedidos.length === 0">
+          <i class="fas fa-shopping-bag me-2"></i>
+          No tienes pedidos aún. ¡Realiza tu primera compra!
+        </div>
+
+        <div class="row g-4">
+          <div class="col-md-6" *ngFor="let pedido of misPedidos">
+            <div class="card pedido-card h-100 shadow-sm">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                  <div>
+                    <h6 class="mb-0 text-danger">{{ pedido.numeroBoleta }}</h6>
+                    <small class="text-muted">{{ pedido.fecha }}</small>
+                  </div>
+                  <span class="badge" [class.bg-info]="pedido.tipoEntrega === 'recojo'" [class.bg-warning]="pedido.tipoEntrega === 'delivery'">
+                    {{ pedido.tipoEntrega === 'recojo' ? 'Recojo' : 'Delivery' }}
+                  </span>
+                </div>
+
+                <div class="mb-3">
+                  <strong class="d-block mb-2">Productos:</strong>
+                  <ul class="list-unstyled mb-0">
+                    <li *ngFor="let item of pedido.items" class="small">
+                      • {{ item.producto }} <span class="badge bg-secondary">x{{ item.cantidad }}</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div class="mb-2" *ngIf="pedido.tipoEntrega === 'delivery'">
+                  <strong class="small">Dirección:</strong>
+                  <p class="small mb-0 text-muted">{{ pedido.direccionEntrega }}</p>
+                </div>
+
+                <hr>
+
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <strong>Método de Pago:</strong>
+                    <div class="small">
+                      <i [class]="pedido.metodoPago === 'efectivo' ? 'fas fa-money-bill-wave' : 'fas fa-credit-card'"></i>
+                      {{ pedido.metodoPago === 'efectivo' ? 'Efectivo' : 'Tarjeta *' + pedido.tarjetaUsada }}
+                    </div>
+                  </div>
+                  <div class="text-end">
+                    <div class="h5 mb-0 text-success">S/ {{ pedido.totalSoles.toFixed(2) }}</div>
+                    <small class="text-muted">$ {{ pedido.totalDolares.toFixed(2) }}</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+<app-footer></app-footer>

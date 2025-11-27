@@ -1,18 +1,18 @@
 <app-header></app-header>
-
 <div class="productos-container py-5">
   <div class="container">
     
     <!-- Header -->
     <div class="row mb-4">
       <div class="col-md-8">
-        <h2 class="fw-bold text-dark">
+        <h2 class="fw-bold text-danger">
           <i class="fas fa-shopping-bag me-2"></i>
-          Nuestra Carta
+          Nuestros Productos
         </h2>
         <p class="text-muted">Encuentra las mejores hamburguesas de Ica</p>
       </div>
-      <div class="col-md-4 text-end">
+      <!-- BOTÓN SOLO VISIBLE PARA ADMIN -->
+      <div class="col-md-4 text-end" *ngIf="esAdmin()">
         <button class="btn btn-danger" (click)="toggleFormulario()">
           <i class="fas fa-plus me-2"></i>
           {{ mostrarFormulario ? 'Cerrar Formulario' : 'Nuevo Producto' }}
@@ -20,21 +20,8 @@
       </div>
     </div>
 
-    <!-- TABS DE CATEGORÍAS -->
-    <div class="tabs-container mb-4">
-      <div class="tabs-wrapper">
-        <button 
-          *ngFor="let categoria of categorias"
-          class="tab-btn" 
-          [class.active]="activeTab === categoria"
-          (click)="cambiarTab(categoria)">
-          {{ categoria }}
-        </button>
-      </div>
-    </div>
-
-    <!-- Formulario CRUD -->
-    <div class="row mb-4" *ngIf="mostrarFormulario" id="formulario-producto">
+    <!-- Formulario CRUD - SOLO VISIBLE PARA ADMIN -->
+    <div class="row mb-4" *ngIf="mostrarFormulario && esAdmin()" id="formulario-producto">
       <div class="col-12">
         <div class="card shadow-sm">
           <div class="card-body">
@@ -56,16 +43,6 @@
                   >
                 </div>
 
-                <!-- Tipo de Categoría (Tabs) -->
-                <div class="col-md-6 mb-3">
-                  <label for="tipoCategoria" class="form-label">Tipo *</label>
-                  <select class="form-select" id="tipoCategoria" formControlName="tipoCategoria">
-                    <option value="Platos">Platos</option>
-                    <option value="Bebidas">Bebidas</option>
-                    <option value="Postres">Postres</option>
-                  </select>
-                </div>
-
                 <!-- Categoría -->
                 <div class="col-md-6 mb-3">
                   <label for="categoria" class="form-label">Categoría *</label>
@@ -76,6 +53,30 @@
                     <option value="Especial">Especial</option>
                     <option value="Vegetariana">Vegetariana</option>
                   </select>
+                </div>
+
+                <!-- Descripción -->
+                <div class="col-12 mb-3">
+                  <label for="descripcion" class="form-label">Descripción *</label>
+                  <textarea 
+                    class="form-control" 
+                    id="descripcion"
+                    formControlName="descripcion"
+                    rows="2"
+                    placeholder="Describe el producto"
+                  ></textarea>
+                </div>
+
+                <!-- Imagen URL -->
+                <div class="col-12 mb-3">
+                  <label for="imagen" class="form-label">URL de la Imagen *</label>
+                  <input 
+                    type="text" 
+                    class="form-control" 
+                    id="imagen"
+                    formControlName="imagen"
+                    placeholder="https://ejemplo.com/imagen.jpg"
+                  >
                 </div>
 
                 <!-- Precio -->
@@ -92,32 +93,8 @@
                   >
                 </div>
 
-                <!-- Descripción -->
-                <div class="col-12 mb-3">
-                  <label for="descripcion" class="form-label">Descripción *</label>
-                  <textarea 
-                    class="form-control" 
-                    id="descripcion"
-                    formControlName="descripcion"
-                    rows="2"
-                    placeholder="Describe el producto"
-                  ></textarea>
-                </div>
-
-                <!-- Imagen URL -->
-                <div class="col-md-8 mb-3">
-                  <label for="imagen" class="form-label">URL de la Imagen *</label>
-                  <input 
-                    type="text" 
-                    class="form-control" 
-                    id="imagen"
-                    formControlName="imagen"
-                    placeholder="https://ejemplo.com/imagen.jpg"
-                  >
-                </div>
-
                 <!-- Stock -->
-                <div class="col-md-4 mb-3">
+                <div class="col-md-6 mb-3">
                   <label for="stock" class="form-label">Stock *</label>
                   <input 
                     type="number" 
@@ -155,18 +132,17 @@
       </div>
     </div>
 
-    <!-- Lista de Productos Filtrados -->
+    <!-- Lista de Productos con *ngFor -->
     <div class="row g-4">
-      <!-- Mensaje cuando no hay productos -->
-      <div class="col-12" *ngIf="productosFiltrados.length === 0">
+      <div class="col-12" *ngIf="productos.length === 0">
         <div class="alert alert-info text-center">
           <i class="fas fa-info-circle me-2"></i>
-          No hay productos en la categoría "{{ activeTab }}". ¡Crea el primer producto!
+          No hay productos disponibles. ¡Crea el primer producto!
         </div>
       </div>
 
       <!-- Card de Producto -->
-      <div class="col-12 col-sm-6 col-md-4 col-lg-3" *ngFor="let producto of productosFiltrados">
+      <div class="col-12 col-sm-6 col-md-4 col-lg-3" *ngFor="let producto of productos">
         <div class="card producto-card h-100 shadow-sm">
           <!-- Imagen -->
           <div class="card-img-container">
@@ -176,7 +152,7 @@
               class="card-img-top"
               onerror="this.src='https://via.placeholder.com/300x200?text=Imagen+No+Disponible'"
             >
-            <span class="badge-categoria bg-dark">{{ producto.categoria }}</span>
+            <span class="badge-categoria bg-danger">{{ producto.categoria }}</span>
           </div>
 
           <!-- Cuerpo -->
@@ -187,7 +163,7 @@
             <!-- Precios -->
             <div class="precios mb-3">
               <div class="precio-soles">
-                <strong class="text-dark fs-5">S/ {{ producto.precioSoles.toFixed(2) }}</strong>
+                <strong class="text-danger fs-5">S/ {{ producto.precioSoles.toFixed(2) }}</strong>
               </div>
               <div class="precio-dolares">
                 <small class="text-success">≈ $ {{ producto.precioDolares.toFixed(2) }} USD</small>
@@ -204,33 +180,41 @@
 
             <!-- Botones de Acción -->
             <div class="d-flex gap-2">
+              <!-- Botón Agregar - VISIBLE PARA TODOS -->
               <button 
-                class="btn btn-danger btn-sm flex-grow-1"
+                class="btn btn-danger btn-sm"
+                [class.flex-grow-1]="!esAdmin()"
+                [class.w-100]="!esAdmin()"
                 (click)="agregarAlCarrito(producto)"
                 [disabled]="producto.stock === 0"
               >
                 <i class="fas fa-cart-plus me-1"></i>
                 {{ producto.stock === 0 ? 'Sin Stock' : 'Agregar' }}
               </button>
-              <button 
-                class="btn btn-outline-primary btn-sm"
-                (click)="editarProducto(producto)"
-                title="Editar"
-              >
-                <i class="fas fa-edit"></i>
-              </button>
-              <button 
-                class="btn btn-outline-danger btn-sm"
-                (click)="eliminarProducto(producto)"
-                title="Eliminar"
-              >
-                <i class="fas fa-trash"></i>
-              </button>
+              
+              <!-- Botones Editar/Eliminar - SOLO PARA ADMIN -->
+              <ng-container *ngIf="esAdmin()">
+                <button 
+                  class="btn btn-outline-primary btn-sm"
+                  (click)="editarProducto(producto)"
+                  title="Editar"
+                >
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button 
+                  class="btn btn-outline-danger btn-sm"
+                  (click)="eliminarProducto(producto)"
+                  title="Eliminar"
+                >
+                  <i class="fas fa-trash"></i>
+                </button>
+              </ng-container>
             </div>
           </div>
         </div>
       </div>
     </div>
+
   </div>
 </div>
 <app-footer></app-footer>

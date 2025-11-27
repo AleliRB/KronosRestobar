@@ -7,12 +7,12 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule ,RouterLink, RouterLinkActive],
+   imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
 export class HeaderComponent implements OnInit {
-title = 'BurgerIca';
+ title = 'BurgerIca';
   cantidadCarrito: number = 0;
   usuarioActual: Usuario | null = null;
 
@@ -49,5 +49,12 @@ title = 'BurgerIca';
    */
   estaAutenticado(): boolean {
     return this.authService.estaAutenticado();
+  }
+
+  /**
+   * NUEVO: Verifica si el usuario es admin
+   */
+  esAdmin(): boolean {
+    return this.authService.esAdmin();
   }
 }

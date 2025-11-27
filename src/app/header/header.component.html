@@ -2,9 +2,9 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-danger sticky-top shadow">
   <div class="container-fluid px-4">
     <!-- Logo/Brand -->
-    <a class="navbar-brand fw-bold" routerLink="/">
+    <a class="navbar-brand " routerLink="/">
       <i class="fas fa-hamburger me-2"></i>
-      Kronos
+      Cronos
     </a>
 
     <!-- Toggle button para móviles -->
@@ -15,32 +15,42 @@
     <!-- Menu Items -->
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav me-auto">
+        <!-- Inicio - Visible para todos -->
         <li class="nav-item">
           <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
             <i class="fas fa-home me-1"></i>Inicio
           </a>
         </li>
+
+        <!-- Productos - Visible para todos -->
         <li class="nav-item">
           <a class="nav-link" routerLink="/productos" routerLinkActive="active">
-            <i class="fas fa-shopping-bag me-1"></i>Carta
+            <i class="fas fa-shopping-bag me-1"></i>Productos
           </a>
         </li>
-      
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/conocenos" routerLinkActive="active">
-            <i class="fas fa-info-circle me-1"></i>Conócenos
+
+        <!-- Historial Ventas - SOLO ADMIN -->
+        <li class="nav-item" *ngIf="esAdmin()">
+          <a class="nav-link" routerLink="/historial-ventas" routerLinkActive="active">
+            <i class="fas fa-chart-line me-1"></i>Historial Ventas
           </a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/contactanos" routerLinkActive="active">
-            <i class="fas fa-envelope me-1"></i>Contacto
-          </a>
-        </li>
+
+        <!-- Menús SOLO para usuarios normales y visitantes (NO ADMIN) -->
+        <ng-container *ngIf="!esAdmin()">
+  
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/conocenos" routerLinkActive="active">
+              <i class="fas fa-info-circle me-1"></i>Conócenos
+            </a>
+          </li>
+          
+        </ng-container>
       </ul>
 
       <!-- Carrito y Usuario -->
       <ul class="navbar-nav">
-        <!-- Carrito -->
+        <!-- Carrito - VISIBLE PARA TODOS (incluido admin) -->
         <li class="nav-item">
           <a class="nav-link position-relative" routerLink="/carrito">
             <i class="fas fa-shopping-cart fa-lg"></i>
@@ -55,8 +65,22 @@
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
             <i class="fas fa-user-circle fa-lg me-1"></i>
             {{ usuarioActual?.nombres }}
+            <!-- BADGE DE ADMIN -->
+            <span class="badge bg-warning text-dark ms-2" *ngIf="esAdmin()">
+              <i class="fas fa-crown me-1"></i>ADMIN
+            </span>
           </a>
           <ul class="dropdown-menu dropdown-menu-end">
+            <!-- Enlace al perfil (solo para usuarios normales, NO admin) -->
+             <li *ngIf="!esAdmin()">
+              <a class="dropdown-item" routerLink="/perfil">
+                <i class="fas fa-user me-2"></i>Mi Perfil
+                </a>
+                </li>
+                <li *ngIf="!esAdmin()">
+                  <hr class="dropdown-divider">
+                </li>
+                  <!-- Cerrar Sesión (para todos) -->
             <li>
               <a class="dropdown-item" href="#" (click)="cerrarSesion(); $event.preventDefault()">
                 <i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión

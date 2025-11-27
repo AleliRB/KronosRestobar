@@ -1,0 +1,57 @@
+.perfil-container {
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
+.nav-pills .nav-link {
+  color: #6c757d;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.nav-pills .nav-link.active {
+  background-color: #8B0000;
+}
+
+.nav-pills .nav-link:hover:not(.active) {
+  background-color: #f8d7da;
+  color: #8B0000;
+}
+
+.card {
+  border: none;
+  border-radius: 12px;
+}
+
+.tarjeta-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  transition: transform 0.3s ease;
+}
+
+.tarjeta-card:hover {
+  transform: translateY(-5px);
+}
+
+.tarjeta-principal {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  box-shadow: 0 8px 16px rgba(245, 87, 108, 0.3);
+}
+
+.pedido-card {
+  transition: transform 0.3s ease;
+}
+
+.pedido-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+.btn-danger {
+  background-color: #8B0000;
+  border: none;
+}
+
+.btn-danger:hover {
+  background-color: #a00000;
+}

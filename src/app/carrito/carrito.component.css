@@ -30,26 +30,26 @@
 }
 
 .btn-danger {
-  background-color: #0D2036;
+  background-color: #8B0000;
   border: none;
   transition: all 0.3s ease;
 }
 
 .btn-danger:hover {
-  background-color: #11304A; /* AZUL HOVER */
+  background-color: #a00000;
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(139, 0, 0, 0.3);
 }
 
 .btn-outline-danger {
-  color: #0D2036;
-  border-color: #0D2036;
+  color: #8B0000;
+  border-color: #8B0000;
   transition: all 0.3s ease;
 }
 
 .btn-outline-danger:hover {
-  background-color: #11304A; /* AZUL HOVER */
-  border-color: #0D2036;
+  background-color: #8B0000;
+  border-color: #8B0000;
   color: white;
 }
 
@@ -59,13 +59,16 @@
   color: #495057;
 }
 
-.sticky-top {
+/* Sticky mejorado */
+.resumen-sticky {
   position: sticky;
+  top: 80px;
+  align-self: flex-start;
 }
 
 @media (max-width: 991px) {
-  .sticky-top {
+  .resumen-sticky {
     position: relative;
-    top: 0 !important;
+    top: 0;
   }
 }

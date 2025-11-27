@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { ProductosService, Producto } from '../services/productos.service';
 import { CarritoService } from '../services/carrito.service';
+import { AuthService } from '../services/auth.service';
 import { FooterComponent } from "../footer/footer.component";
 import { HeaderComponent } from "../header/header.component";
 
@@ -13,26 +16,21 @@ import { HeaderComponent } from "../header/header.component";
   templateUrl: './productos.component.html',
   styleUrls: ['./productos.component.css']
 })
-export class ProductosComponent implements OnInit {
-  // Tab activo
-  activeTab: string = 'Platos';
-  
-  // Productos
-  todosProductos: Producto[] = [];
-  productosFiltrados: Producto[] = [];
-  
-  // Formulario
+export class ProductosComponent implements OnInit, OnDestroy {
+  // Subject utilizado para gestionar la cancelación de suscripciones activas
+  // Previene memory leaks al destruir el componente
+  private destroy$ = new Subject<void>();
+
+  productos: Producto[] = [];
   productoForm: FormGroup;
   modoEdicion: boolean = false;
   productoEditandoId: number | null = null;
   mostrarFormulario: boolean = false;
 
-  // Categorías disponibles
-  categorias = ['Platos', 'Bebidas', 'Postres'];
-
   constructor(
     private productosService: ProductosService,
     private carritoService: CarritoService,
+    private authService: AuthService,
     private fb: FormBuilder
   ) {
     this.productoForm = this.fb.group({
@@ -41,54 +39,69 @@ export class ProductosComponent implements OnInit {
       imagen: ['', Validators.required],
       precioSoles: ['', [Validators.required, Validators.min(0)]],
       categoria: ['', Validators.required],
-      tipoCategoria: ['Platos', Validators.required], // Nueva categoría para tabs
       stock: ['', [Validators.required, Validators.min(0)]]
     });
   }
 
+  /**
+   * Lifecycle Hook: Inicialización del componente
+   * Carga la lista de productos disponibles
+   */
   ngOnInit(): void {
     this.cargarProductos();
   }
 
-  //Carga los productos y filtra según tab activo
+  /**
+   * Lifecycle Hook: Limpieza al destruir el componente
+   * Cancela todas las suscripciones activas para prevenir memory leaks
+   */
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  /**
+   * Carga la lista de productos con gestión automática de suscripción
+   */
   cargarProductos(): void {
-    this.productosService.productos$.subscribe(productos => {
-      this.todosProductos = productos;
-      this.filtrarProductosPorTab();
-    });
+    this.productosService.productos$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(productos => {
+        this.productos = productos;
+      });
   }
 
-  cambiarTab(tab: string): void {
-    this.activeTab = tab;
-    this.filtrarProductosPorTab();
+  esAdmin(): boolean {
+    return this.authService.esAdmin();
   }
 
-  //Filtra productos según el tab activo
-  filtrarProductosPorTab(): void {
-    // Filtrar por tipo de categoría (Comida, Bebidas, Postres)
-    this.productosFiltrados = this.todosProductos.filter(producto => {
-      // Si el producto no tiene tipoCategoria, asumimos que es Comida por defecto
-      const tipo = (producto as any).tipoCategoria || 'Platos';
-      return tipo === this.activeTab;
-    });
-  }
-
-  //Agrega un producto al carrito
   agregarAlCarrito(producto: Producto): void {
-  if (producto.stock > 0) {
-    this.carritoService.agregarProducto(producto, 1);
+    if (producto.stock > 0) {
+      this.carritoService.agregarProducto(producto, 1);
+      alert(`${producto.nombre} agregado al carrito`);
+    } else {
+      alert('Producto sin stock');
+    }
   }
-}
 
   toggleFormulario(): void {
+    if (!this.esAdmin()) {
+      alert('No tienes permisos para realizar esta acción');
+      return;
+    }
+    
     this.mostrarFormulario = !this.mostrarFormulario;
     if (!this.mostrarFormulario) {
       this.cancelarEdicion();
     }
   }
 
-  //Guarda un producto (crear o actualizar)
   guardarProducto(): void {
+    if (!this.esAdmin()) {
+      alert('No tienes permisos para realizar esta acción');
+      return;
+    }
+
     if (this.productoForm.invalid) {
       alert('Por favor, completa todos los campos correctamente');
       return;
@@ -97,11 +110,9 @@ export class ProductosComponent implements OnInit {
     const datosProducto = this.productoForm.value;
 
     if (this.modoEdicion && this.productoEditandoId) {
-      // Actualizar
       this.productosService.actualizarProducto(this.productoEditandoId, datosProducto);
       alert('Producto actualizado exitosamente');
     } else {
-      // Crear
       this.productosService.crearProducto(datosProducto);
       alert('Producto creado exitosamente');
     }
@@ -110,8 +121,12 @@ export class ProductosComponent implements OnInit {
     this.mostrarFormulario = false;
   }
 
-  //Prepara el formulario para editar
   editarProducto(producto: Producto): void {
+    if (!this.esAdmin()) {
+      alert('No tienes permisos para realizar esta acción');
+      return;
+    }
+
     this.modoEdicion = true;
     this.productoEditandoId = producto.id;
     this.mostrarFormulario = true;
@@ -122,18 +137,20 @@ export class ProductosComponent implements OnInit {
       imagen: producto.imagen,
       precioSoles: producto.precioSoles,
       categoria: producto.categoria,
-      tipoCategoria: (producto as any).tipoCategoria || 'Platos',
       stock: producto.stock
     });
 
-    // Scroll al formulario
     setTimeout(() => {
       document.getElementById('formulario-producto')?.scrollIntoView({ behavior: 'smooth' });
     }, 100);
   }
 
-  // Elimina un producto
   eliminarProducto(producto: Producto): void {
+    if (!this.esAdmin()) {
+      alert('No tienes permisos para realizar esta acción');
+      return;
+    }
+
     if (confirm(`¿Estás seguro de eliminar "${producto.nombre}"?`)) {
       this.productosService.eliminarProducto(producto.id);
       alert('Producto eliminado exitosamente');
@@ -143,8 +160,6 @@ export class ProductosComponent implements OnInit {
   cancelarEdicion(): void {
     this.modoEdicion = false;
     this.productoEditandoId = null;
-    this.productoForm.reset({
-      tipoCategoria: this.activeTab
-    });
+    this.productoForm.reset();
   }
 }

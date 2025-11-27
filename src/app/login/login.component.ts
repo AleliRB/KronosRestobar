@@ -4,7 +4,8 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { FooterComponent } from "../footer/footer.component";
-import { HeaderComponent } from "../header/header.component";
+import { HeaderComponent} from "../header/header.component";
+
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -13,7 +14,7 @@ import { HeaderComponent } from "../header/header.component";
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
-loginForm: FormGroup;
+  loginForm: FormGroup;
   mensajeError: string = '';
   cargando: boolean = false;
 
@@ -27,7 +28,8 @@ loginForm: FormGroup;
       contrasena: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
-   /**
+
+  /**
    * Inicia sesión
    */
   onLogin(): void {
@@ -54,6 +56,7 @@ loginForm: FormGroup;
       }
     }, 500);
   }
+
   /**
    * Verifica si un campo es inválido y ha sido tocado
    */

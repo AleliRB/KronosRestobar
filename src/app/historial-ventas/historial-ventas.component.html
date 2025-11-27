@@ -1,0 +1,139 @@
+<app-header></app-header>
+<div class="historial-container py-5">
+  <div class="container">
+    
+    <!-- Header -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <h2 class="fw-bold text-danger">
+          <i class="fas fa-chart-line me-2"></i>
+          Historial de Ventas
+        </h2>
+        <p class="text-muted">Panel de administración - Todas las ventas registradas</p>
+      </div>
+    </div>
+
+    <!-- Estadísticas -->
+    <div class="row mb-4">
+      <div class="col-md-4 mb-3">
+        <div class="card shadow-sm border-0">
+          <div class="card-body text-center">
+            <i class="fas fa-dollar-sign fa-3x text-success mb-3"></i>
+            <h3 class="fw-bold text-success">S/ {{ totalVentas.toFixed(2) }}</h3>
+            <p class="text-muted mb-0">Total Ventas</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-3">
+        <div class="card shadow-sm border-0">
+          <div class="card-body text-center">
+            <i class="fas fa-store fa-3x text-info mb-3"></i>
+            <h3 class="fw-bold text-info">{{ estadisticas.recojo }}</h3>
+            <p class="text-muted mb-0">Recojo en Tienda</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-3">
+        <div class="card shadow-sm border-0">
+          <div class="card-body text-center">
+            <i class="fas fa-truck fa-3x text-warning mb-3"></i>
+            <h3 class="fw-bold text-warning">{{ estadisticas.delivery }}</h3>
+            <p class="text-muted mb-0">Delivery</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabla de Ventas -->
+    <div class="row">
+      <div class="col-12">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title fw-bold mb-4">
+              <i class="fas fa-receipt me-2"></i>
+              Registro de Ventas ({{ ventas.length }})
+            </h5>
+
+            <div class="table-responsive" *ngIf="ventas.length > 0">
+              <table class="table table-hover align-middle">
+                <thead class="table-light">
+                  <tr>
+                    <th>N° Boleta</th>
+                    <th>Fecha</th>
+                    <th>Cliente</th>
+                    <th>DNI</th>
+                    <th style="min-width: 200px;">Productos</th>
+                    <th>Tipo Entrega</th>
+                    <th style="min-width: 180px;">Dirección de Entrega</th>
+                    <th>Método de Pago</th>
+                    <th class="text-end">Total (S/)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let venta of ventas">
+                    <td>
+                      <span class="badge bg-danger">{{ venta.numeroBoleta }}</span>
+                    </td>
+                    <td>
+                      <small>{{ venta.fecha }}</small>
+                    </td>
+                    <td>
+                      <strong>{{ venta.clienteNombre }}</strong>
+                    </td>
+                    <td>{{ venta.clienteDni }}</td>
+                    <td>
+                      <small>
+                        <div *ngFor="let item of venta.items" class="mb-1">
+                          • {{ item.producto }} <span class="badge bg-secondary">x{{ item.cantidad }}</span>
+                        </div>
+                      </small>
+                    </td>
+                    <td>
+                      <span [class]="getTipoEntregaClass(venta.tipoEntrega)">
+                        <i [class]="venta.tipoEntrega === 'recojo' ? 'fas fa-store' : 'fas fa-truck'"></i>
+                        {{ getTipoEntregaTexto(venta.tipoEntrega) }}
+                      </span>
+                      <span class="badge bg-secondary ms-1" *ngIf="venta.costoDelivery > 0">
+                        +S/ {{ venta.costoDelivery }}
+                      </span>
+                    </td>
+                    <td>
+                      <div *ngIf="venta.tipoEntrega === 'delivery' && venta.direccionEntrega" class="direccion-entrega">
+                        <i class="fas fa-map-marker-alt text-danger me-1"></i>
+                        <small class="fw-bold">{{ venta.direccionEntrega }}</small>
+                      </div>
+                      <div *ngIf="venta.tipoEntrega === 'recojo'" class="text-center">
+                        <small class="text-muted">-</small>
+                      </div>
+                    </td>
+                    <td>
+                      <span class="badge"
+                            [class.bg-success]="venta.metodoPago === 'efectivo'"
+                            [class.bg-primary]="venta.metodoPago === 'tarjeta'">
+                        <i [class]="venta.metodoPago === 'efectivo' ? 'fas fa-money-bill-wave' : 'fas fa-credit-card'"></i>
+                        {{ venta.metodoPago === 'efectivo' ? 'Efectivo' : 'Tarjeta' }}
+                      </span>
+                      <div *ngIf="venta.metodoPago === 'tarjeta' && venta.tarjetaUsada" class="mt-1">
+                        <small class="text-muted">**** {{ venta.tarjetaUsada }}</small>
+                      </div>
+                    </td>
+                    <td class="text-end">
+                      <strong class="text-success">S/ {{ venta.totalSoles.toFixed(2) }}</strong>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="alert alert-info text-center" *ngIf="ventas.length === 0">
+              <i class="fas fa-info-circle me-2"></i>
+              No hay ventas registradas aún
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+<app-footer></app-footer>

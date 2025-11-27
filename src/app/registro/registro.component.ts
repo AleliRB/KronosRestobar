@@ -6,19 +6,11 @@ import { AuthService } from '../services/auth.service';
 import { ReniecService } from '../services/reniec.service';
 import { FooterComponent } from "../footer/footer.component";
 import { HeaderComponent } from "../header/header.component";
-import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-registro',
   standalone: true,
- imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    RouterLink,
-    FooterComponent,
-    HeaderComponent,
-    HttpClientModule  // ← OBLIGATORIO
-  ],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, FooterComponent, HeaderComponent],
   templateUrl: './registro.component.html',
   styleUrl: './registro.component.css'
 })

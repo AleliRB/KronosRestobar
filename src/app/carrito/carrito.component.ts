@@ -1,9 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { CarritoService, ItemCarrito } from '../services/carrito.service';
+import { AuthService } from '../services/auth.service';
 import { FooterComponent } from "../footer/footer.component";
 import { HeaderComponent } from "../header/header.component";
+
 @Component({
   selector: 'app-carrito',
   standalone: true,
@@ -11,36 +15,53 @@ import { HeaderComponent } from "../header/header.component";
   templateUrl: './carrito.component.html',
   styleUrl: './carrito.component.css'
 })
-export class CarritoComponent implements OnInit {
-items: ItemCarrito[] = [];
+export class CarritoComponent implements OnInit, OnDestroy {
+  // Subject utilizado para gestionar la cancelación de suscripciones activas
+  // Previene memory leaks al destruir el componente
+  private destroy$ = new Subject<void>();
+
+  items: ItemCarrito[] = [];
   totalSoles: number = 0;
   totalDolares: number = 0;
   cantidadTotal: number = 0;
 
   constructor(
     private carritoService: CarritoService,
+    private authService: AuthService,
     private router: Router
   ) {}
 
+  /**
+   * Lifecycle Hook: Inicialización del componente
+   * Carga los items del carrito de compras
+   */
   ngOnInit(): void {
     this.cargarCarrito();
   }
 
   /**
-   * Carga los items del carrito
+   * Lifecycle Hook: Limpieza al destruir el componente
+   * Cancela todas las suscripciones activas para prevenir memory leaks
    */
-  cargarCarrito(): void {
-    this.carritoService.items$.subscribe(items => {
-      this.items = items;
-      this.totalSoles = this.carritoService.obtenerTotalSoles();
-      this.totalDolares = this.carritoService.obtenerTotalDolares();
-      this.cantidadTotal = this.carritoService.obtenerCantidadTotal();
-    });
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   /**
-   * Aumenta la cantidad de un producto
+   * Carga el contenido del carrito con gestión automática de suscripción
    */
+  cargarCarrito(): void {
+    this.carritoService.items$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(items => {
+        this.items = items;
+        this.totalSoles = this.carritoService.obtenerTotalSoles();
+        this.totalDolares = this.carritoService.obtenerTotalDolares();
+        this.cantidadTotal = this.carritoService.obtenerCantidadTotal();
+      });
+  }
+
   aumentarCantidad(productoId: number): void {
     const item = this.items.find(i => i.producto.id === productoId);
     if (item) {
@@ -48,9 +69,6 @@ items: ItemCarrito[] = [];
     }
   }
 
-  /**
-   * Disminuye la cantidad de un producto
-   */
   disminuirCantidad(productoId: number): void {
     const item = this.items.find(i => i.producto.id === productoId);
     if (item && item.cantidad > 1) {
@@ -58,38 +76,34 @@ items: ItemCarrito[] = [];
     }
   }
 
-  /**
-   * Elimina un producto del carrito
-   */
   eliminarProducto(productoId: number): void {
     if (confirm('¿Estás seguro de eliminar este producto?')) {
       this.carritoService.eliminarProducto(productoId);
     }
   }
 
-  /**
-   * Vacía todo el carrito
-   */
   vaciarCarrito(): void {
     if (confirm('¿Estás seguro de vaciar el carrito completo?')) {
       this.carritoService.vaciarCarrito();
     }
   }
 
-  /**
-   * Procede al checkout (boleta)
-   */
   irABoleta(): void {
     if (this.items.length === 0) {
       alert('El carrito está vacío');
       return;
     }
+
+    if (!this.authService.estaAutenticado()) {
+      if (confirm('Debes iniciar sesión para generar la boleta. ¿Ir al login?')) {
+        this.router.navigate(['/login']);
+      }
+      return;
+    }
+
     this.router.navigate(['/boleta']);
   }
 
-  /**
-   * Verifica si el carrito está vacío
-   */
   carritoVacio(): boolean {
     return this.items.length === 0;
   }

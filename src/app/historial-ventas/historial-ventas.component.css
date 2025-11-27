@@ -1,0 +1,58 @@
+.historial-container {
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
+.card {
+  border-radius: 12px;
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+}
+
+.table {
+  font-size: 0.9rem;
+}
+
+.table th {
+  font-weight: 600;
+  color: #495057;
+  border-top: none;
+  white-space: nowrap;
+}
+
+.table td {
+  vertical-align: middle;
+}
+
+.badge {
+  font-size: 0.75rem;
+  padding: 0.4rem 0.6rem;
+}
+
+.direccion-entrega {
+  background-color: #fff3cd;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border-left: 3px solid #ffc107;
+  display: inline-block;
+}
+
+.direccion-entrega small {
+  color: #856404;
+  line-height: 1.4;
+  display: block;
+}
+
+.table-responsive {
+  border-radius: 8px;
+  overflow-x: auto;
+}
+
+@media (max-width: 768px) {
+  .table {
+    font-size: 0.8rem;
+  }
+}

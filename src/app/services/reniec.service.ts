@@ -14,11 +14,10 @@ export interface ReniecResponse {
   providedIn: 'root'
 })
 export class ReniecService {
-  // Nueva API de apiperu.dev
-  private apiUrl = 'https://apiperu.dev/api/dni';
+  private apiUrl = '/api/dni';
   private token = '47ed608cf2038e49755c8ce4a83bc8e2f456723fbf4c72eed6a0379687d1b32b'; 
 
-  // Base de datos local simulada (fallback por si falla la API)
+  // Base de datos local para usar como fallback si la API falla
   private dniDatabase: { [key: string]: ReniecResponse } = {
     '72774152': {
       nombres: 'MARIA ELENA',
@@ -42,37 +41,24 @@ export class ReniecService {
 
   constructor(private http: HttpClient) { }
 
-  /**
-   * Consulta DNI en API RENIEC con token de autenticación
-   * @param dni - Número de DNI (8 dígitos)
-   * @returns Observable con datos de la persona
-   */
+  // Consulta DNI en la API de RENIEC con token de autorización
   consultarDNI(dni: string): Observable<ReniecResponse | null> {
-    // Validar formato DNI
     if (!dni || dni.length !== 8 || !/^\d+$/.test(dni)) {
-      console.warn('⚠️ DNI inválido:', dni);
+      console.warn('DNI inválido:', dni);
       return of(null);
     }
 
-    console.log('🔍 Consultando DNI en RENIEC:', dni);
-
-    // Headers con el token de autorización
     const headers = new HttpHeaders({
       'Accept': 'application/json',
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${this.token}`
     });
 
-    // Body con el DNI (método POST)
-    const body = {
-      dni: dni
-    };
+    const body = { dni: dni };
 
-    return this.http.post<any>(this.apiUrl, body, { headers }).pipe(
+    return this.http.get<any>(`${this.apiUrl}/${dni}`).pipe(
       map(response => {
-        console.log('✅ Respuesta exitosa de RENIEC:', response);
-        
-        // Verificar si la respuesta tiene los datos esperados
+        // Formato con data wrapper
         if (response && response.data) {
           return {
             nombres: response.data.nombres,
@@ -82,7 +68,7 @@ export class ReniecService {
           };
         }
         
-        // Formato directo (sin data)
+        // Formato directo
         if (response && response.nombres) {
           return {
             nombres: response.nombres,
@@ -92,35 +78,28 @@ export class ReniecService {
           };
         }
         
-        console.warn('⚠️ Respuesta no reconocida, usando fallback');
         return null;
       }),
       catchError(error => {
-        console.error('❌ Error al consultar API RENIEC:', error);
-        console.log('🔄 Usando base de datos local como fallback');
+        console.error('Error consultando API RENIEC:', error);
         
-        // Si falla la API, usar base de datos local
+        // Intenta usar base de datos local
         if (this.dniDatabase[dni]) {
-          console.log('✅ DNI encontrado en base de datos local');
           return of(this.dniDatabase[dni]);
         }
         
-        // Si no está en BD local, generar datos de ejemplo
-        console.log('⚠️ Generando datos de ejemplo');
+        // Si no existe, genera datos de ejemplo
         return of(this.generarDatosFallback(dni));
       })
     );
   }
 
-  /**
-   * Genera datos de fallback basados en el DNI ingresado
-   */
+  // Genera datos aleatorios pero consistentes basados en el DNI
   private generarDatosFallback(dni: string): ReniecResponse {
     const nombres = ['JUAN CARLOS', 'MARIA ELENA', 'JOSE LUIS', 'ANA LUCIA', 'CARLOS ALBERTO', 'ROSA MARIA'];
     const apellidosP = ['PEREZ', 'GARCIA', 'RODRIGUEZ', 'MARTINEZ', 'LOPEZ', 'HERNANDEZ', 'GONZALEZ'];
     const apellidosM = ['GOMEZ', 'SILVA', 'TORRES', 'CASTRO', 'FLORES', 'DIAZ', 'RAMOS'];
     
-    // Usar el DNI como seed para generar siempre el mismo nombre para el mismo DNI
     const seed = parseInt(dni.substring(0, 4));
     
     return {
@@ -131,9 +110,6 @@ export class ReniecService {
     };
   }
 
-  /**
-   * Obtiene el nombre completo formateado
-   */
   getNombreCompleto(data: ReniecResponse): string {
     return `${data.nombres} ${data.apellidoPaterno} ${data.apellidoMaterno}`;
   }

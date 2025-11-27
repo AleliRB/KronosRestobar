@@ -4,7 +4,7 @@
 }
 
 .boleta-card {
-  border: 2px solid #0D2036;
+  border: 2px solid #8B0000;
   border-radius: 10px;
 }
 
@@ -23,17 +23,65 @@
 }
 
 .btn-danger {
-  background-color: #0D2036;
+  background-color: #8B0000;
   border: none;
 }
 
 .btn-danger:hover {
-  background-color: #11304A; /* AZUL HOVER */
+  background-color: #a00000;
 }
 
 .form-control.bg-light {
   background-color: #f8f9fa !important;
   cursor: not-allowed;
+}
+
+/* Opciones de entrega mejoradas */
+.entrega-option {
+  border: 3px solid #dee2e6;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  background-color: white;
+}
+
+.entrega-option:hover {
+  border-color: #8B0000;
+  transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(139, 0, 0, 0.2);
+}
+
+.entrega-option.selected {
+  border-color: #8B0000;
+  background: linear-gradient(135deg, #fff5f5 0%, #ffe6e6 100%);
+  box-shadow: 0 6px 20px rgba(139, 0, 0, 0.4);
+  transform: scale(1.05);
+}
+
+.entrega-option.selected::before {
+  content: '✓';
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #8B0000;
+  color: white;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.entrega-option.selected i {
+  transform: scale(1.1);
+}
+
+.entrega-option.selected h5 {
+  color: #8B0000;
 }
 
 /* Estilos para impresión */
@@ -68,4 +116,43 @@
   .table td {
     border: 1px solid #000 !important;
   }
+
+  /* Tarjetas mini seleccionables */
+.tarjeta-mini {
+  border: 2px solid #dee2e6;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background-color: white;
+}
+
+.tarjeta-mini:hover {
+  border-color: #8B0000;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(139, 0, 0, 0.2);
+}
+
+.tarjeta-seleccionada {
+  border-color: #8B0000;
+  background: linear-gradient(135deg, #fff5f5 0%, #ffe6e6 100%);
+  box-shadow: 0 4px 12px rgba(139, 0, 0, 0.3);
+}
+
+.tarjeta-seleccionada::before {
+  content: '✓';
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: #8B0000;
+  color: white;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
+}
+
 }

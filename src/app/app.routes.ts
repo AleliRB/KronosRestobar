@@ -1,14 +1,15 @@
 import { Routes } from '@angular/router';
 import { InicioComponent } from './inicio/inicio.component';
 import { ConocenosComponent } from './conocenos/conocenos.component';
-import { ContactanosComponent } from './contactanos/contactanos.component';
 
+import { PerfilComponent } from './perfil/perfil.component';
 import { ProductosComponent } from './productos/productos.component';
 import { LoginComponent } from './login/login.component';
 import { RegistroComponent } from './registro/registro.component';
 import { CarritoComponent } from './carrito/carrito.component';
 import { BoletaComponent } from './boleta/boleta.component';
 import { NotFoundComponent } from './not-found/not-found.component';
+import { HistorialVentasComponent } from './historial-ventas/historial-ventas.component';
 
 export const routes: Routes = [
     {
@@ -27,6 +28,7 @@ export const routes: Routes = [
         path: 'productos',
         component: ProductosComponent
     },
+
     {
         path: 'carrito',
         component: CarritoComponent
@@ -36,16 +38,21 @@ export const routes: Routes = [
         component: BoletaComponent
     },
     {
+        path: 'historial-ventas', 
+        component: HistorialVentasComponent
+    },
+    {   
+        path: 'perfil', 
+        component: PerfilComponent 
+    },
+    {
         path: 'conocenos',
         component: ConocenosComponent
     },
-    {
-        path: 'contactanos',
-        component: ContactanosComponent
-    },
+    
  
     {
-        path: '**', // Ruta 404 - DEBE IR AL FINAL
+        path: '**', // Ruta 404 
         component: NotFoundComponent
     }
 ];
