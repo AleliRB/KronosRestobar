@@ -4,16 +4,16 @@
     <!-- LÍNEA DECORATIVA SUPERIOR -->
     <div style="width: 300px; height: 2px; background-color: #ffffffaa;" class="mx-auto mb-1"></div>
 
-    <!-- LOGO + CRONOS (CENTRADO) -->
+    <!-- LOGO + NOMBRE (CENTRADO) -->
     <a class="navbar-brand mx-auto text-center" routerLink="/">
       <i class="fas fa-hamburger me-2"></i>
-      <span class="fs-3 fw-bold">Cronos</span>
+      <span class="fs-3 fw-bold">BurgerIca</span>
     </a>
 
     <!-- LÍNEA DECORATIVA INFERIOR -->
     <div style="width:300px; height: 2px; background-color: #ffffffaa;" class="mx-auto mt-1 mb-2"></div>
 
-    <!-- FILA INFERIOR -->
+    <!-- FILA INFERIOR: MENÚ CENTRADO + LOGIN/REGISTRO -->
     <div class="d-flex w-100 align-items-center">
 
       <!-- Columna izquierda vacía (equilibrio) -->
@@ -21,35 +21,79 @@
 
       <!-- MENÚ REALMENTE CENTRADO -->
       <ul class="navbar-nav d-flex flex-row gap-2 mx-auto text-center">
-
+        <!-- Menús para todos -->
         <li class="nav-item">
-          <a class="nav-link" routerLink="/">
+          <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
             <i class="fas fa-home me-1"></i> Inicio
           </a>
         </li>
-
         <li class="nav-item">
-          <a class="nav-link" routerLink="/productos">
+          <a class="nav-link" routerLink="/productos" routerLinkActive="active">
             <i class="fas fa-shopping-bag me-1"></i> Productos
           </a>
         </li>
-
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/conocenos">
+        <li class="nav-item" *ngIf="!esAdmin()">
+          <a class="nav-link" routerLink="/conocenos" routerLinkActive="active">
             <i class="fas fa-info-circle me-1"></i> Conócenos
           </a>
         </li>
 
+        <!-- Menú SOLO para admin -->
+        <li class="nav-item" *ngIf="esAdmin()">
+          <a class="nav-link" routerLink="/historial-ventas" routerLinkActive="active">
+            <i class="fas fa-chart-line me-1"></i> Historial Ventas
+          </a>
+        </li>
+      </ul>
+
+      <!-- Carrito y Usuario -->
+      <ul class="navbar-nav">
+        <!-- Carrito -->
+        <li class="nav-item">
+          <a class="nav-link position-relative" routerLink="/carrito">
+            <i class="fas fa-shopping-cart fa-lg"></i>
+            <span class="badge bg-warning text-dark position-absolute top-0 start-100 translate-middle" *ngIf="cantidadCarrito > 0">
+              {{ cantidadCarrito }}
+            </span>
+          </a>
+        </li>
+
+        <!-- Usuario autenticado -->
+        <li class="nav-item dropdown" *ngIf="estaAutenticado()">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+            <i class="fas fa-user-circle fa-lg me-1"></i>
+            {{ usuarioActual?.nombres }}
+            <span class="badge bg-warning text-dark ms-2" *ngIf="esAdmin()">
+              <i class="fas fa-crown me-1"></i>ADMIN
+            </span>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li *ngIf="!esAdmin()">
+              <a class="dropdown-item" routerLink="/perfil">
+                <i class="fas fa-user me-2"></i> Mi Perfil
+              </a>
+            </li>
+            <li *ngIf="!esAdmin()">
+              <hr class="dropdown-divider">
+            </li>
+            <li>
+              <a class="dropdown-item" href="#" (click)="cerrarSesion(); $event.preventDefault()">
+                <i class="fas fa-sign-out-alt me-2"></i> Cerrar Sesión
+              </a>
+            </li>
+          </ul>
+        </li>
       </ul>
 
       <!-- LOGIN / REGISTRO A LA DERECHA -->
-      <div class="d-flex align-items-center justify-content-end"  >
-
-        <!-- LOGIN CON ÍCONO -->
+      <div class="d-flex align-items-center justify-content-end">
         <a class="nav-link text-white" routerLink="/login">
           <i class="fas fa-sign-in-alt me-1"></i> Login
         </a>
-
-        <!-- Registro -->
-        <a class="btn btn-outline-light btn-sm" routerLink="/registro">Registro
-
+        <a class="btn btn-outline-light btn-sm ms-2" routerLink="/registro">
+          Registro
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>
