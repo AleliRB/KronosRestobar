@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import {  RouterLink, RouterLinkActive } from '@angular/router';
 import { CarritoService } from '../services/carrito.service';
 import { AuthService, Usuario } from '../services/auth.service';
 import { Router } from '@angular/router';
 @Component({
   selector: 'app-header',
   standalone: true,
-   imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive],
+   imports: [CommonModule, RouterLink, RouterLinkActive],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
