@@ -1,6 +1,6 @@
 .registro-container {
-  background: linear-gradient(135deg, #8B0000 0%, #460000 100%);
-  min-height: 100vh;
+  
+  min-height: 10vh;
 }
 
 .card {

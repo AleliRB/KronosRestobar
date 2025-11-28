@@ -5,7 +5,7 @@
     <!-- Header -->
     <div class="row mb-4">
       <div class="col-md-8">
-        <h2 class="fw-bold text-danger">
+        <h2 class="fw-bold text-warning">
           <i class="fas fa-shopping-bag me-2"></i>
           Nuestros Productos
         </h2>
@@ -152,7 +152,7 @@
               class="card-img-top"
               onerror="this.src='https://via.placeholder.com/300x200?text=Imagen+No+Disponible'"
             >
-            <span class="badge-categoria bg-danger">{{ producto.categoria }}</span>
+            <span class="badge-categoria bg-warning">{{ producto.categoria }}</span>
           </div>
 
           <!-- Cuerpo -->
@@ -163,7 +163,7 @@
             <!-- Precios -->
             <div class="precios mb-3">
               <div class="precio-soles">
-                <strong class="text-danger fs-5">S/ {{ producto.precioSoles.toFixed(2) }}</strong>
+                <strong class="text-warning fs-5">S/ {{ producto.precioSoles.toFixed(2) }}</strong>
               </div>
               <div class="precio-dolares">
                 <small class="text-success">≈ $ {{ producto.precioDolares.toFixed(2) }} USD</small>

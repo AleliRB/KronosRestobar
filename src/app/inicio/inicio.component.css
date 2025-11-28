@@ -239,6 +239,7 @@
   padding: 0.5rem 1rem;
   font-size: 0.75rem;
   font-weight: 600;
+  color:white;
   border-radius: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
@@ -329,22 +330,4 @@
   .card-img-container {
     height: 180px;
   }
-}
-/* Banner Secundario */
-.banner-secundario {
-  background: linear-gradient(135deg, #0D2036  0%, #11304A 100%);
-  padding: 5rem 0;
-  position: relative;
-  overflow: hidden;
-}
-
-.banner-secundario::before {
-  content: '';
-  position: absolute;
-  width: 300px;
-  height: 300px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 50%;
-  top: -150px;
-  right: -150px;
 }

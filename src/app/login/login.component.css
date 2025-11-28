@@ -1,6 +1,6 @@
 .login-container {
-  background: linear-gradient(135deg, #0D2036 0%, #11304A 100%);
-  min-height: 100vh;
+  background:white;
+    min-height: 30vh;
 }
 
 .card {
