@@ -1,540 +1,451 @@
 <app-header></app-header>
-<div class="boleta-container py-5">
-  <div class="container">
+<div class="bg-light min-vh-100">
+  <div class="container py-5">
 
     <!-- ALERTA SI ES ADMIN -->
-    <div class="row justify-content-center mb-4" *ngIf="esAdmin">
-      <div class="col-lg-8">
-        <div class="alert alert-warning shadow-sm">
-          <i class="fas fa-exclamation-triangle me-2"></i>
-          <strong>Nota:</strong> Estás logueado como administrador. Esta compra es solo para pruebas.
-        </div>
-      </div>
+    <div *ngIf="esAdmin" class="alert alert-warning border-start border-warning border-4 mb-4">
+      <i class="fas fa-exclamation-triangle me-2"></i>
+      Estás logueado como administrador. Esta compra es solo para pruebas.
     </div>
 
-    <!-- Selector de Tipo de Comprobante -->
-    <div class="row justify-content-center mb-4" *ngIf="!compraRealizada">
-      <div class="col-lg-8">
-        <div class="card shadow-sm">
-          <div class="card-body p-4">
-            <h4 class="fw-bold text-danger mb-4">
-              <i class="fas fa-file-invoice me-2"></i>
-              Tipo de Comprobante
-            </h4>
-
-            <div class="row g-3 mb-4">
-              <div class="col-md-6">
-                <div 
-                  class="entrega-option p-4 text-center"
-                  [class.selected]="tipoComprobante === 'boleta'"
-                  (click)="seleccionarTipoComprobante('boleta')"
-                >
-                  <i class="fas fa-receipt fa-3x text-primary mb-3"></i>
-                  <h5 class="fw-bold">Boleta</h5>
-                  <p class="text-muted mb-0">Para consumidor final</p>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div 
-                  class="entrega-option p-4 text-center"
-                  [class.selected]="tipoComprobante === 'factura'"
-                  (click)="seleccionarTipoComprobante('factura')"
-                >
-                  <i class="fas fa-file-invoice-dollar fa-3x text-success mb-3"></i>
-                  <h5 class="fw-bold">Factura</h5>
-                  <p class="text-muted mb-0">Para empresas con RUC</p>
-                </div>
-              </div>
-            </div>
-
-            <!-- Formulario RUC si es Factura -->
-            <div *ngIf="tipoComprobante === 'factura'">
-              <h6 class="fw-bold mb-3">Datos de la Empresa</h6>
-              
-              <div class="row g-3">
-                <div class="col-md-8">
-                  <label class="form-label">RUC *</label>
-                  <input 
-                    type="text" 
-                    class="form-control"
-                    [(ngModel)]="rucCliente"
-                    placeholder="11 dígitos"
-                    maxlength="11"
-                  >
-                </div>
-                <div class="col-md-4 d-flex align-items-end">
-                  <button 
-                    class="btn btn-primary w-100"
-                    (click)="consultarRUC()"
-                    [disabled]="consultandoRUC"
-                  >
-                    {{ consultandoRUC ? 'Consultando...' : 'Buscar' }}
-                  </button>
-                </div>
-              </div>
-
-              <div class="mt-3" *ngIf="razonSocial">
-                <label class="form-label">Razón Social</label>
-                <input 
-                  type="text" 
-                  class="form-control bg-light"
-                  [value]="razonSocial"
-                  readonly
-                >
-              </div>
-              
-              <div class="mt-3" *ngIf="direccion">
-                <label class="form-label">Dirección</label>
-                <input 
-                  type="text" 
-                  class="form-control bg-light"
-                  [value]="direccion"
-                  readonly
-                >
-              </div>
-            </div>
-
-            <!-- Alerta si no selecciona tipo -->
-            <div class="alert alert-warning mt-3" *ngIf="!tipoComprobante">
-              <i class="fas fa-exclamation-triangle me-2"></i>
-              Por favor, selecciona un tipo de comprobante para continuar
-            </div>
+    <!-- ========== ANTES DE COMPRAR ========== -->
+    <ng-container *ngIf="!compraRealizada">
+      
+      <!-- Tipo de Comprobante -->
+      <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body p-4">
+          <div class="d-flex align-items-center mb-4 pb-3 border-bottom">
+            <span class="badge rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 36px; height: 36px; font-size: 1rem; background: linear-gradient(135deg, #d4af37, #f4c430);">1</span>
+            <h3 class="fw-bold mb-0">Tipo de Comprobante</h3>
           </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Selector de Tipo de Entrega - ANTES DE COMPRAR -->
-    <div class="row justify-content-center mb-4" *ngIf="!compraRealizada && tipoComprobante">
-      <div class="col-lg-8">
-        <div class="card shadow-sm">
-          <div class="card-body p-4">
-            <h4 class="fw-bold text-danger mb-4">
-              <i class="fas fa-shipping-fast me-2"></i>
-              Selecciona el Tipo de Entrega
-            </h4>
-
-            <!-- Opciones de Entrega -->
-            <div class="row g-3 mb-4">
-              <div class="col-md-6">
-                <div 
-                  class="entrega-option p-4 text-center"
-                  [class.selected]="tipoEntrega === 'recojo'"
-                  (click)="seleccionarTipoEntrega('recojo')"
-                >
-                  <i class="fas fa-store fa-3x text-info mb-3"></i>
-                  <h5 class="fw-bold">Recojo en Tienda</h5>
-                  <p class="text-muted mb-0">Sin costo adicional</p>
-                  <p class="text-success fw-bold">GRATIS</p>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div 
-                  class="entrega-option p-4 text-center"
-                  [class.selected]="tipoEntrega === 'delivery'"
-                  (click)="seleccionarTipoEntrega('delivery')"
-                >
-                  <i class="fas fa-truck fa-3x text-warning mb-3"></i>
-                  <h5 class="fw-bold">Delivery</h5>
-                  <p class="text-muted mb-0">Costo adicional</p>
-                  <p class="text-danger fw-bold">+ S/ 5.00</p>
-                </div>
-              </div>
-            </div>
-
-            <!-- Formulario Dirección (solo si es delivery) -->
-            <div class="mb-4" *ngIf="tipoEntrega === 'delivery'">
-              <label for="direccion" class="form-label fw-bold">
-                <i class="fas fa-map-marker-alt me-2"></i>
-                Dirección de Entrega *
-              </label>
-              <input 
-                type="text" 
-                class="form-control form-control-lg" 
-                id="direccion"
-                [(ngModel)]="direccionEntrega"
-                placeholder="Ej: Av. Los Incas 123, Ica"
-                maxlength="100"
-              >
-              <small class="text-muted">Ingresa la dirección donde entregaremos tu pedido</small>
-            </div>
-
-            <!-- Alerta de selección -->
-            <div class="alert alert-warning" *ngIf="!tipoEntrega">
-              <i class="fas fa-exclamation-triangle me-2"></i>
-              Por favor, selecciona un tipo de entrega para continuar
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Selector de Método de Pago - ANTES DE COMPRAR -->
-    <div class="row justify-content-center mb-4" *ngIf="!compraRealizada && tipoEntrega">
-      <div class="col-lg-8">
-        <div class="card shadow-sm">
-          <div class="card-body p-4">
-            <h4 class="fw-bold text-danger mb-4">
-              <i class="fas fa-credit-card me-2"></i>
-              Selecciona el Método de Pago
-            </h4>
-
-            <!-- Opciones de Pago -->
-            <div class="row g-3 mb-4">
-              <div class="col-md-6">
-                <div 
-                  class="entrega-option p-4 text-center"
-                  [class.selected]="metodoPago === 'efectivo'"
-                  (click)="seleccionarMetodoPago('efectivo')"
-                >
-                  <i class="fas fa-money-bill-wave fa-3x text-success mb-3"></i>
-                  <h5 class="fw-bold">Efectivo</h5>
-                  <p class="text-muted mb-0">Pago contra entrega</p>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div 
-                  class="entrega-option p-4 text-center"
-                  [class.selected]="metodoPago === 'tarjeta'"
-                  (click)="seleccionarMetodoPago('tarjeta')"
-                >
-                  <i class="fas fa-credit-card fa-3x text-primary mb-3"></i>
-                  <h5 class="fw-bold">Tarjeta</h5>
-                  <p class="text-muted mb-0">Débito o Crédito</p>
-                </div>
-              </div>
-            </div>
-
-            <!-- Sección de Tarjetas (si selecciona tarjeta) -->
-            <div *ngIf="metodoPago === 'tarjeta'">
-              
-              <!-- Lista de tarjetas guardadas -->
-              <div class="mb-3" *ngIf="tarjetas.length > 0">
-                <h6 class="fw-bold mb-3">Selecciona una tarjeta:</h6>
-                <div class="row g-2">
-                  <div class="col-md-6" *ngFor="let tarjeta of tarjetas">
-                    <div 
-                      class="tarjeta-mini p-3"
-                      [class.tarjeta-seleccionada]="tarjetaSeleccionada?.id === tarjeta.id"
-                      (click)="seleccionarTarjeta(tarjeta)"
-                    >
-                      <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                          <i class="fas fa-credit-card me-2"></i>
-                          <strong>**** {{ tarjeta.numeroTarjeta }}</strong>
-                        </div>
-                        <span class="badge bg-info" *ngIf="tarjeta.esPrincipal">Principal</span>
-                      </div>
-                      <small class="text-muted d-block mt-1">{{ tarjeta.titular }}</small>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Botón agregar nueva tarjeta -->
-              <div class="text-center mb-3">
-                <button class="btn btn-outline-danger btn-sm" (click)="toggleFormTarjeta()">
-                  <i class="fas fa-plus me-2"></i>
-                  {{ mostrarFormTarjeta ? 'Cancelar' : 'Agregar Nueva Tarjeta' }}
-                </button>
-              </div>
-
-              <!-- Formulario nueva tarjeta -->
-              <div class="card bg-light" *ngIf="mostrarFormTarjeta">
-                <div class="card-body">
-                  <h6 class="fw-bold mb-3">Nueva Tarjeta</h6>
-                  
-                  <form [formGroup]="tarjetaForm" (ngSubmit)="agregarTarjeta()">
-                    <div class="row">
-                      <div class="col-md-6 mb-3">
-                        <label class="form-label small">Número de Tarjeta *</label>
-                        <input 
-                          type="text" 
-                          class="form-control form-control-sm"
-                          formControlName="numeroTarjeta"
-                          placeholder="1234567890123456"
-                          maxlength="16"
-                        >
-                      </div>
-
-                      <div class="col-md-6 mb-3">
-                        <label class="form-label small">Titular *</label>
-                        <input 
-                          type="text" 
-                          class="form-control form-control-sm"
-                          formControlName="titular"
-                          placeholder="Como aparece en la tarjeta"
-                        >
-                      </div>
-
-                      <div class="col-md-4 mb-3">
-                        <label class="form-label small">Tipo *</label>
-                        <select class="form-select form-select-sm" formControlName="tipo">
-                          <option value="debito">Débito</option>
-                          <option value="credito">Crédito</option>
-                        </select>
-                      </div>
-
-                      <div class="col-md-4 mb-3">
-                        <label class="form-label small">Vencimiento *</label>
-                        <input 
-                          type="text" 
-                          class="form-control form-control-sm"
-                          formControlName="vencimiento"
-                          placeholder="MM/YY"
-                          maxlength="5"
-                          (input)="formatearVencimiento($event)"
-                        >
-                      </div>
-
-                      <div class="col-md-4 mb-3">
-                        <label class="form-label small">CVV *</label>
-                        <input 
-                          type="password" 
-                          class="form-control form-control-sm"
-                          formControlName="cvv"
-                          placeholder="123"
-                          maxlength="4"
-                        >
-                      </div>
-                    </div>
-
-                    <button 
-                      type="submit" 
-                      class="btn btn-success btn-sm"
-                      [disabled]="tarjetaForm.invalid"
-                    >
-                      <i class="fas fa-save me-2"></i>Guardar y Usar
-                    </button>
-                  </form>
-                </div>
-              </div>
-
-            </div>
-
-            <!-- Alerta de selección -->
-            <div class="alert alert-warning" *ngIf="!metodoPago">
-              <i class="fas fa-exclamation-triangle me-2"></i>
-              Por favor, selecciona un método de pago
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Resumen Total - ANTES DE COMPRAR -->
-    <div class="row justify-content-center mb-4" *ngIf="!compraRealizada && tipoEntrega">
-      <div class="col-lg-8">
-        <div class="card bg-light shadow-sm">
-          <div class="card-body">
-            <h5 class="fw-bold mb-3">Resumen del Pedido:</h5>
-            <div class="d-flex justify-content-between mb-2">
-              <span>Subtotal productos:</span>
-              <strong>S/ {{ totalSoles.toFixed(2) }}</strong>
-            </div>
-            <div class="d-flex justify-content-between mb-2" *ngIf="tipoEntrega === 'delivery'">
-              <span>Costo delivery:</span>
-              <strong class="text-warning">S/ {{ costoDelivery.toFixed(2) }}</strong>
-            </div>
-            <hr>
-            <div class="d-flex justify-content-between mb-2">
-              <h5 class="mb-0">TOTAL (Soles):</h5>
-              <h5 class="mb-0 text-danger">S/ {{ totalFinal.toFixed(2) }}</h5>
-            </div>
-            <div class="d-flex justify-content-between">
-              <span class="text-muted small">TOTAL (Dólares):</span>
-              <span class="text-success fw-bold">$ {{ totalFinalDolares.toFixed(2) }}</span>
-            </div>
-            <div class="text-center mt-2">
-              <small class="text-muted">Tipo de cambio: S/ {{ tipoCambioActual.toFixed(3) }} = $ 1.00</small>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Boleta/Factura Generada (después de comprar) -->
-    <div class="row justify-content-center" id="boleta-imprimible" *ngIf="compraRealizada">
-      <div class="col-lg-8">
-        <div class="card shadow-lg boleta-card">
-          <div class="card-body p-5">
-            
-            <!-- Header de la Boleta/Factura -->
-            <div class="text-center mb-4 boleta-header">
-              <h2 class="fw-bold text-danger mb-1">Cronos</h2>
-              <p class="text-muted mb-0">Calle Principal 123, Ica</p>
-              <p class="text-muted mb-0">Tel: (056) 123-456</p>
-              <hr class="my-3">
-              <h4 class="fw-bold">
-                {{ tipoComprobante === 'boleta' ? 'BOLETA' : 'FACTURA' }} DE VENTA ELECTRÓNICA
-              </h4>
-              <p class="mb-0">
-                <strong>N°:</strong> {{ numeroBoleta }}<br>
-                <strong>Fecha:</strong> {{ fechaBoleta }}
-              </p>
-            </div>
-
-            <!-- Datos del Cliente/Empresa -->
-            <div class="mb-4">
-              <h5 class="fw-bold mb-3">
-                {{ tipoComprobante === 'boleta' ? 'Datos del Cliente:' : 'Datos de la Empresa:' }}
-              </h5>
-              
-              <!-- Si es Boleta -->
-              <div class="row" *ngIf="tipoComprobante === 'boleta'">
-                <div class="col-md-4">
-                  <strong>DNI:</strong> {{ usuarioActual?.dni }}
-                </div>
-                <div class="col-md-8">
-                  <strong>Cliente:</strong> 
-                  {{ usuarioActual?.nombres }} {{ usuarioActual?.apellidos }}
-                </div>
-              </div>
-
-              <!-- Si es Factura -->
-              <div *ngIf="tipoComprobante === 'factura'">
-                <div class="row mb-2">
-                  <div class="col-md-4">
-                    <strong>RUC:</strong> {{ rucCliente }}
-                  </div>
-                  <div class="col-md-8">
-                    <strong>Razón Social:</strong> {{ razonSocial }}
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-12">
-                    <strong>Dirección Fiscal:</strong> {{ direccion }}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Tipo de Entrega -->
-            <div class="mb-4">
-              <h5 class="fw-bold mb-3">Tipo de Entrega:</h5>
-              <div class="alert" [class.alert-info]="tipoEntrega === 'recojo'" [class.alert-warning]="tipoEntrega === 'delivery'">
-                <i [class]="tipoEntrega === 'recojo' ? 'fas fa-store' : 'fas fa-truck'" class="me-2"></i>
-                <strong>{{ tipoEntrega === 'recojo' ? 'Recojo en Tienda' : 'Delivery' }}</strong>
-                <div *ngIf="tipoEntrega === 'delivery'" class="mt-2">
-                  <i class="fas fa-map-marker-alt me-2 text-danger"></i>
-                  <strong>Dirección:</strong> {{ direccionEntrega }}
-                </div>
-              </div>
-            </div>
-
-            <!-- Método de Pago -->
-            <div class="mb-4">
-              <h5 class="fw-bold mb-3">Método de Pago:</h5>
-              <div class="alert" [class.alert-success]="metodoPago === 'efectivo'" [class.alert-primary]="metodoPago === 'tarjeta'">
-                <i [class]="metodoPago === 'efectivo' ? 'fas fa-money-bill-wave' : 'fas fa-credit-card'" class="me-2"></i>
-                <strong>{{ metodoPago === 'efectivo' ? 'Efectivo' : 'Tarjeta **** ' + tarjetaSeleccionada?.numeroTarjeta }}</strong>
-              </div>
-            </div>
-
-            <!-- Detalle de Productos -->
-            <div class="mb-4">
-              <h5 class="fw-bold mb-3">Detalle de la Compra:</h5>
-              <div class="table-responsive">
-                <table class="table table-bordered">
-                  <thead class="table-light">
-                    <tr>
-                      <th>Producto</th>
-                      <th class="text-center">Cant.</th>
-                      <th class="text-end">P. Unit. (S/)</th>
-                      <th class="text-end">Subtotal (S/)</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let item of items">
-                      <td>{{ item.producto.nombre }}</td>
-                      <td class="text-center">{{ item.cantidad }}</td>
-                      <td class="text-end">S/ {{ item.producto.precioSoles.toFixed(2) }}</td>
-                      <td class="text-end fw-bold">S/ {{ item.subtotalSoles.toFixed(2) }}</td>
-                    </tr>
-                    <tr *ngIf="tipoEntrega === 'delivery' && costoDelivery > 0">
-                      <td colspan="3" class="text-end"><strong>Costo de Delivery:</strong></td>
-                      <td class="text-end fw-bold text-warning">S/ {{ costoDelivery.toFixed(2) }}</td>
-                    </tr>
-                  </tbody>
-                  <tfoot class="table-light">
-                    <tr>
-                      <td colspan="3" class="text-end fw-bold">TOTAL (Soles):</td>
-                      <td class="text-end fw-bold text-danger fs-5">S/ {{ totalFinal.toFixed(2) }}</td>
-                    </tr>
-                    <tr>
-                      <td colspan="3" class="text-end">TOTAL (Dólares):</td>
-                      <td class="text-end fw-bold text-success">$ {{ totalFinalDolares.toFixed(2) }}</td>
-                    </tr>
-                  </tfoot>
-                </table>
-              </div>
-              <div class="text-end">
-                <small class="text-muted">Tipo de cambio: S/ {{ tipoCambioActual.toFixed(3) }} = $ 1.00</small>
-              </div>
-            </div>
-
-            <!-- Footer -->
-            <div class="text-center mt-4 text-muted">
-              <small>¡Gracias por tu compra!</small><br>
-              <small>Cronos - Sabores que conquistan</small>
-            </div>
-
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Botones de Acción -->
-    <div class="row justify-content-center mt-4 no-print">
-      <div class="col-lg-8">
-        <div class="d-flex gap-2 justify-content-center flex-wrap">
           
-          <!-- ANTES DE COMPRAR -->
-          <ng-container *ngIf="!compraRealizada">
-            <button 
-              class="btn btn-danger btn-lg"
-              (click)="realizarCompra()"
-              [disabled]="!tipoComprobante || 
-                          !tipoEntrega || 
-                          (tipoEntrega === 'delivery' && !direccionEntrega) || 
-                          !metodoPago || 
-                          (metodoPago === 'tarjeta' && !tarjetaSeleccionada) ||
-                          (tipoComprobante === 'factura' && (!rucCliente || rucCliente.length !== 11 || !razonSocial))"
-            >
-              <i class="fas fa-check-circle me-2"></i>
-              Realizar Compra
-            </button>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="border rounded-3 p-4 text-center position-relative option-card" 
+                   [class.border-warning]="tipoComprobante === 'boleta'"
+                   [class.bg-warning]="tipoComprobante === 'boleta'"
+                   [class.bg-opacity-10]="tipoComprobante === 'boleta'"
+                   style="cursor: pointer; transition: all 0.2s;"
+                   (click)="seleccionarTipoComprobante('boleta')">
+                <i class="fas fa-receipt fs-1 mb-3" [class.text-warning]="tipoComprobante === 'boleta'" [class.text-muted]="tipoComprobante !== 'boleta'"></i>
+                <h5 class="fw-bold mb-2">Boleta</h5>
+                <p class="text-muted mb-0 small">Para consumidor final</p>
+                <span *ngIf="tipoComprobante === 'boleta'" class="position-absolute top-0 end-0 m-2 badge rounded-circle" style="width: 26px; height: 26px; padding: 0; line-height: 26px; background: #d4af37; color: #2c2c2c;">✓</span>
+              </div>
+            </div>
+            
+            <div class="col-md-6">
+              <div class="border rounded-3 p-4 text-center position-relative option-card" 
+                   [class.border-warning]="tipoComprobante === 'factura'"
+                   [class.bg-warning]="tipoComprobante === 'factura'"
+                   [class.bg-opacity-10]="tipoComprobante === 'factura'"
+                   style="cursor: pointer; transition: all 0.2s;"
+                   (click)="seleccionarTipoComprobante('factura')">
+                <i class="fas fa-file-invoice-dollar fs-1 mb-3" [class.text-warning]="tipoComprobante === 'factura'" [class.text-muted]="tipoComprobante !== 'factura'"></i>
+                <h5 class="fw-bold mb-2">Factura</h5>
+                <p class="text-muted mb-0 small">Para empresas con RUC</p>
+                <span *ngIf="tipoComprobante === 'factura'" class="position-absolute top-0 end-0 m-2 badge rounded-circle" style="width: 26px; height: 26px; padding: 0; line-height: 26px; background: #d4af37; color: #2c2c2c;">✓</span>
+              </div>
+            </div>
+          </div>
 
-            <button 
-              class="btn btn-outline-secondary btn-lg"
-              (click)="cancelar()"
-            >
-              <i class="fas fa-arrow-left me-2"></i>
-              Volver al Carrito
-            </button>
-          </ng-container>
+          <!-- Formulario RUC -->
+          <div class="mt-4" *ngIf="tipoComprobante === 'factura'">
+            <label class="form-label fw-semibold small">RUC de la Empresa</label>
+            <div class="input-group mb-3">
+              <input type="text" 
+                     class="form-control"
+                     [(ngModel)]="rucCliente"
+                     placeholder="11 dígitos"
+                     maxlength="11">
+              <button class="btn px-4" style="background: linear-gradient(135deg, #d4af37, #f4c430); color: #2c2c2c; font-weight: 600;" 
+                      (click)="consultarRUC()"
+                      [disabled]="consultandoRUC">
+                {{ consultandoRUC ? 'Buscando...' : 'Buscar' }}
+              </button>
+            </div>
 
-          <!-- DESPUÉS DE COMPRAR -->
-          <ng-container *ngIf="compraRealizada">
-            <button 
-              class="btn btn-success btn-lg"
-              (click)="imprimirBoleta()"
-            >
-              <i class="fas fa-download me-2"></i>
-              Descargar {{ tipoComprobante === 'boleta' ? 'Boleta' : 'Factura' }} PDF
-            </button>
+            <div class="alert alert-light border-start border-4 mb-0" style="border-color: #d4af37 !important;" *ngIf="razonSocial">
+              <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                <span class="text-muted small fw-semibold">Razón Social</span>
+                <span class="small">{{ razonSocial }}</span>
+              </div>
+              <div class="d-flex justify-content-between align-items-center py-2" *ngIf="direccion">
+                <span class="text-muted small fw-semibold">Dirección</span>
+                <span class="small text-end">{{ direccion }}</span>
+              </div>
+            </div>
+          </div>
 
-            <button 
-              class="btn btn-primary btn-lg"
-              (click)="volverAProductos()"
-            >
-              <i class="fas fa-shopping-bag me-2"></i>
-              Volver a Productos
-            </button>
-          </ng-container>
-
+          <div class="alert alert-warning border-0 mt-3 mb-0" *ngIf="!tipoComprobante">
+            Por favor, selecciona un tipo de comprobante
+          </div>
         </div>
       </div>
+
+      <!-- Tipo de Entrega -->
+      <div class="card border-0 shadow-sm mb-4" *ngIf="tipoComprobante">
+        <div class="card-body p-4">
+          <div class="d-flex align-items-center mb-4 pb-3 border-bottom">
+            <span class="badge rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 36px; height: 36px; font-size: 1rem; background: linear-gradient(135deg, #d4af37, #f4c430);">2</span>
+            <h3 class="fw-bold mb-0">Tipo de Entrega</h3>
+          </div>
+
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="border rounded-3 p-4 text-center position-relative option-card" 
+                   [class.border-warning]="tipoEntrega === 'recojo'"
+                   [class.bg-warning]="tipoEntrega === 'recojo'"
+                   [class.bg-opacity-10]="tipoEntrega === 'recojo'"
+                   style="cursor: pointer; transition: all 0.2s;"
+                   (click)="seleccionarTipoEntrega('recojo')">
+                <i class="fas fa-store fs-1 mb-3" [class.text-warning]="tipoEntrega === 'recojo'" [class.text-muted]="tipoEntrega !== 'recojo'"></i>
+                <h5 class="fw-bold mb-2">Recojo en Tienda</h5>
+                <p class="text-muted mb-2 small">Sin costo adicional</p>
+                <span class="badge bg-success rounded-pill">GRATIS</span>
+                <span *ngIf="tipoEntrega === 'recojo'" class="position-absolute top-0 end-0 m-2 badge rounded-circle" style="width: 26px; height: 26px; padding: 0; line-height: 26px; background: #d4af37; color: #2c2c2c;">✓</span>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="border rounded-3 p-4 text-center position-relative option-card" 
+                   [class.border-warning]="tipoEntrega === 'delivery'"
+                   [class.bg-warning]="tipoEntrega === 'delivery'"
+                   [class.bg-opacity-10]="tipoEntrega === 'delivery'"
+                   style="cursor: pointer; transition: all 0.2s;"
+                   (click)="seleccionarTipoEntrega('delivery')">
+                <i class="fas fa-truck fs-1 mb-3" [class.text-warning]="tipoEntrega === 'delivery'" [class.text-muted]="tipoEntrega !== 'delivery'"></i>
+                <h5 class="fw-bold mb-2">Delivery</h5>
+                <p class="text-muted mb-2 small">Entrega a domicilio</p>
+                <span class="badge rounded-pill" style="background: #fff3cd; color: #d4af37;">+ S/ 5.00</span>
+                <span *ngIf="tipoEntrega === 'delivery'" class="position-absolute top-0 end-0 m-2 badge rounded-circle" style="width: 26px; height: 26px; padding: 0; line-height: 26px; background: #d4af37; color: #2c2c2c;">✓</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dirección de entrega -->
+          <div class="mt-4" *ngIf="tipoEntrega === 'delivery'">
+            <label class="form-label fw-semibold small">Dirección de Entrega</label>
+            <input type="text" 
+                   class="form-control"
+                   [(ngModel)]="direccionEntrega"
+                   placeholder="Ej: Av. Los Incas 123, Ica"
+                   maxlength="100">
+          </div>
+
+          <div class="alert alert-warning border-0 mt-3 mb-0" *ngIf="!tipoEntrega">
+            Por favor, selecciona un tipo de entrega
+          </div>
+        </div>
+      </div>
+
+      <!-- Método de Pago -->
+      <div class="card border-0 shadow-sm mb-4" *ngIf="tipoEntrega">
+        <div class="card-body p-4">
+          <div class="d-flex align-items-center mb-4 pb-3 border-bottom">
+            <span class="badge rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 36px; height: 36px; font-size: 1rem; background: linear-gradient(135deg, #d4af37, #f4c430);">3</span>
+            <h3 class="fw-bold mb-0">Método de Pago</h3>
+          </div>
+
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="border rounded-3 p-4 text-center position-relative option-card" 
+                   [class.border-warning]="metodoPago === 'efectivo'"
+                   [class.bg-warning]="metodoPago === 'efectivo'"
+                   [class.bg-opacity-10]="metodoPago === 'efectivo'"
+                   style="cursor: pointer; transition: all 0.2s;"
+                   (click)="seleccionarMetodoPago('efectivo')">
+                <i class="fas fa-money-bill-wave fs-1 mb-3" [class.text-warning]="metodoPago === 'efectivo'" [class.text-muted]="metodoPago !== 'efectivo'"></i>
+                <h5 class="fw-bold mb-2">Efectivo</h5>
+                <p class="text-muted mb-0 small">Pago contra entrega</p>
+                <span *ngIf="metodoPago === 'efectivo'" class="position-absolute top-0 end-0 m-2 badge rounded-circle" style="width: 26px; height: 26px; padding: 0; line-height: 26px; background: #d4af37; color: #2c2c2c;">✓</span>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="border rounded-3 p-4 text-center position-relative option-card" 
+                   [class.border-warning]="metodoPago === 'tarjeta'"
+                   [class.bg-warning]="metodoPago === 'tarjeta'"
+                   [class.bg-opacity-10]="metodoPago === 'tarjeta'"
+                   style="cursor: pointer; transition: all 0.2s;"
+                   (click)="seleccionarMetodoPago('tarjeta')">
+                <i class="fas fa-credit-card fs-1 mb-3" [class.text-warning]="metodoPago === 'tarjeta'" [class.text-muted]="metodoPago !== 'tarjeta'"></i>
+                <h5 class="fw-bold mb-2">Tarjeta</h5>
+                <p class="text-muted mb-0 small">Débito o Crédito</p>
+                <span *ngIf="metodoPago === 'tarjeta'" class="position-absolute top-0 end-0 m-2 badge rounded-circle" style="width: 26px; height: 26px; padding: 0; line-height: 26px; background: #d4af37; color: #2c2c2c;">✓</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tarjetas guardadas -->
+          <div class="mt-4" *ngIf="metodoPago === 'tarjeta'">
+            <div *ngIf="tarjetas.length > 0" class="mb-3">
+              <label class="form-label fw-semibold small">Selecciona una tarjeta</label>
+              <div class="d-flex flex-column gap-2">
+                <div class="border rounded-3 p-3 d-flex align-items-center position-relative" 
+                     *ngFor="let tarjeta of tarjetas"
+                     [class.border-warning]="tarjetaSeleccionada?.id === tarjeta.id"
+                     [class.bg-warning]="tarjetaSeleccionada?.id === tarjeta.id"
+                     [class.bg-opacity-10]="tarjetaSeleccionada?.id === tarjeta.id"
+                     style="cursor: pointer; transition: all 0.2s;"
+                     (click)="seleccionarTarjeta(tarjeta)">
+                  <i class="fas fa-credit-card text-muted fs-5 me-3"></i>
+                  <div class="flex-grow-1">
+                    <strong class="d-block">**** {{ tarjeta.numeroTarjeta }}</strong>
+                    <small class="text-muted">{{ tarjeta.titular }}</small>
+                  </div>
+                  <span class="badge" style="background: #d4af37; color: #2c2c2c;" *ngIf="tarjeta.esPrincipal">Principal</span>
+                  <span *ngIf="tarjetaSeleccionada?.id === tarjeta.id" class="position-absolute top-0 end-0 m-2 badge rounded-circle" style="width: 24px; height: 24px; padding: 0; line-height: 24px; font-size: 13px; background: #d4af37; color: #2c2c2c;">✓</span>
+                </div>
+              </div>
+            </div>
+
+            <button class="btn btn-outline-secondary w-100 mb-3" (click)="toggleFormTarjeta()">
+              <i class="fas" [class.fa-plus]="!mostrarFormTarjeta" [class.fa-times]="mostrarFormTarjeta"></i>
+              {{ mostrarFormTarjeta ? 'Cancelar' : 'Agregar Nueva Tarjeta' }}
+            </button>
+
+            <!-- Formulario nueva tarjeta -->
+            <div class="alert alert-light border-start border-4 p-4" style="border-color: #d4af37 !important;" *ngIf="mostrarFormTarjeta">
+              <form [formGroup]="tarjetaForm" (ngSubmit)="agregarTarjeta()">
+                <div class="row g-3 mb-3">
+                  <div class="col-md-6">
+                    <label class="form-label fw-semibold small">Número de Tarjeta</label>
+                    <input type="text" 
+                           class="form-control"
+                           formControlName="numeroTarjeta"
+                           placeholder="1234567890123456"
+                           maxlength="16">
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label fw-semibold small">Titular</label>
+                    <input type="text" 
+                           class="form-control"
+                           formControlName="titular"
+                           placeholder="Como aparece en la tarjeta">
+                  </div>
+                </div>
+
+                <div class="row g-3 mb-3">
+                  <div class="col-md-4">
+                    <label class="form-label fw-semibold small">Tipo</label>
+                    <select class="form-select" formControlName="tipo">
+                      <option value="debito">Débito</option>
+                      <option value="credito">Crédito</option>
+                    </select>
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label fw-semibold small">Vencimiento</label>
+                    <input type="text" 
+                           class="form-control"
+                           formControlName="vencimiento"
+                           placeholder="MM/YY"
+                           maxlength="5"
+                           (input)="formatearVencimiento($event)">
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label fw-semibold small">CVV</label>
+                    <input type="password" 
+                           class="form-control"
+                           formControlName="cvv"
+                           placeholder="123"
+                           maxlength="4">
+                  </div>
+                </div>
+
+                <button type="submit" 
+                        class="btn btn-dark w-100"
+                        [disabled]="tarjetaForm.invalid">
+                  Guardar y Usar
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <div class="alert alert-warning border-0 mt-3 mb-0" *ngIf="!metodoPago">
+            Por favor, selecciona un método de pago
+          </div>
+        </div>
+      </div>
+
+      <!-- Resumen Total -->
+      <div class="card bg-dark text-white border-0 shadow mb-4" *ngIf="tipoEntrega">
+        <div class="card-body p-4">
+          <div class="d-flex justify-content-between mb-3">
+            <span>Subtotal productos</span>
+            <span>S/ {{ totalSoles.toFixed(2) }}</span>
+          </div>
+          <div class="d-flex justify-content-between mb-3" *ngIf="tipoEntrega === 'delivery'">
+            <span>Costo delivery</span>
+            <span style="color: #d4af37;">S/ {{ costoDelivery.toFixed(2) }}</span>
+          </div>
+          <hr class="border-secondary">
+          <div class="d-flex justify-content-between fs-5 fw-bold mb-2">
+            <span>Total (Soles)</span>
+            <span>S/ {{ totalFinal.toFixed(2) }}</span>
+          </div>
+          <div class="d-flex justify-content-between mb-3 opacity-75">
+            <span>Total (Dólares)</span>
+            <span>$ {{ totalFinalDolares.toFixed(2) }}</span>
+          </div>
+          <div class="text-center small opacity-50 pt-3 border-top border-secondary">
+            Tipo de cambio: S/ {{ tipoCambioActual.toFixed(3) }} = $ 1.00
+          </div>
+        </div>
+      </div>
+
+      <!-- Botones de Acción -->
+      <div class="d-flex gap-3 justify-content-center">
+        <button class="btn btn-outline-dark px-4 py-2" (click)="cancelar()">
+          Volver al Carrito
+        </button>
+        <button class="btn px-4 py-2" style="background: linear-gradient(135deg, #d4af37, #f4c430); color: #2c2c2c; font-weight: 700;"
+                (click)="realizarCompra()"
+                [disabled]="!tipoComprobante || 
+                            !tipoEntrega || 
+                            (tipoEntrega === 'delivery' && !direccionEntrega) || 
+                            !metodoPago || 
+                            (metodoPago === 'tarjeta' && !tarjetaSeleccionada) ||
+                            (tipoComprobante === 'factura' && (!rucCliente || rucCliente.length !== 11 || !razonSocial))">
+          Realizar Compra
+        </button>
+      </div>
+
+    </ng-container>
+
+    <!-- ========== DESPUÉS DE COMPRAR ========== -->
+    <div class="card border shadow-sm mx-auto" style="max-width: 800px;" *ngIf="compraRealizada">
+      <div class="card-body p-5">
+        
+        <!-- Header -->
+        <div class="text-center pb-4 mb-4 border-bottom">
+          <h2 class="fw-bold mb-2" style="color: #d4af37; font-size: 2.5rem; letter-spacing: -0.5px;">Cronos</h2>
+          <p class="text-muted small mb-1">Calle Principal 123, Ica</p>
+          <p class="text-muted small mb-3">Tel: (056) 123-456</p>
+          <div style="height: 2px; background: repeating-linear-gradient(to right, #d4af37 0, #d4af37 10px, transparent 10px, transparent 20px);" class="my-3"></div>
+          <h3 class="fw-bold mb-2">{{ tipoComprobante === 'boleta' ? 'BOLETA' : 'FACTURA' }} DE VENTA</h3>
+          <p class="mb-1"><strong>N°:</strong> {{ numeroBoleta }}</p>
+          <p><strong>Fecha:</strong> {{ fechaBoleta }}</p>
+        </div>
+
+        <!-- Datos del Cliente -->
+        <div class="mb-4 pb-4 border-bottom">
+          <h6 class="text-uppercase fw-bold text-muted small mb-3">{{ tipoComprobante === 'boleta' ? 'Cliente' : 'Empresa' }}</h6>
+          
+          <div class="alert alert-light border-start border-4 mb-0" style="border-color: #d4af37 !important;" *ngIf="tipoComprobante === 'boleta'">
+            <div class="d-flex justify-content-between py-2 border-bottom">
+              <span class="text-muted small fw-semibold">DNI</span>
+              <span class="small">{{ usuarioActual?.dni }}</span>
+            </div>
+            <div class="d-flex justify-content-between py-2">
+              <span class="text-muted small fw-semibold">Nombre</span>
+              <span class="small">{{ usuarioActual?.nombres }} {{ usuarioActual?.apellidos }}</span>
+            </div>
+          </div>
+
+          <div class="alert alert-light border-start border-4 mb-0" style="border-color: #d4af37 !important;" *ngIf="tipoComprobante === 'factura'">
+            <div class="d-flex justify-content-between py-2 border-bottom">
+              <span class="text-muted small fw-semibold">RUC</span>
+              <span class="small">{{ rucCliente }}</span>
+            </div>
+            <div class="d-flex justify-content-between py-2 border-bottom">
+              <span class="text-muted small fw-semibold">Razón Social</span>
+              <span class="small">{{ razonSocial }}</span>
+            </div>
+            <div class="d-flex justify-content-between py-2">
+              <span class="text-muted small fw-semibold">Dirección</span>
+              <span class="small text-end">{{ direccion }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Entrega -->
+        <div class="mb-4 pb-4 border-bottom">
+          <h6 class="text-uppercase fw-bold text-muted small mb-3">Entrega</h6>
+          <div class="alert mb-0" 
+               [class.alert-light]="tipoEntrega === 'delivery'"
+               [class.alert-success]="tipoEntrega === 'recojo'"
+               [class.border-warning]="tipoEntrega === 'delivery'"
+               [class.border-success]="tipoEntrega === 'recojo'"
+               class="border-start border-4 d-flex align-items-center">
+            <i [class]="tipoEntrega === 'recojo' ? 'fas fa-store' : 'fas fa-truck'" class="me-3" [class.text-success]="tipoEntrega === 'recojo'" [class.text-warning]="tipoEntrega === 'delivery'"></i>
+            <span class="fw-semibold">{{ tipoEntrega === 'recojo' ? 'Recojo en Tienda' : 'Delivery' }}</span>
+          </div>
+          <div class="d-flex justify-content-between mt-2" *ngIf="tipoEntrega === 'delivery'">
+            <span class="text-muted small fw-semibold">Dirección</span>
+            <span class="small text-end">{{ direccionEntrega }}</span>
+          </div>
+        </div>
+
+        <!-- Pago -->
+        <div class="mb-4 pb-4 border-bottom">
+          <h6 class="text-uppercase fw-bold text-muted small mb-3">Pago</h6>
+          <div class="alert alert-light border-start border-4 mb-0"
+               [class.border-success]="metodoPago === 'efectivo'"
+               class="d-flex align-items-center"
+               [style.border-color]="metodoPago === 'tarjeta' ? '#d4af37 !important' : ''">
+            <i [class]="metodoPago === 'efectivo' ? 'fas fa-money-bill-wave' : 'fas fa-credit-card'" class="me-3" [class.text-success]="metodoPago === 'efectivo'" [class.text-warning]="metodoPago === 'tarjeta'"></i>
+            <span class="fw-semibold">{{ metodoPago === 'efectivo' ? 'Efectivo' : 'Tarjeta **** ' + tarjetaSeleccionada?.numeroTarjeta }}</span>
+          </div>
+        </div>
+
+        <!-- Productos -->
+        <div class="mb-4">
+          <h6 class="text-uppercase fw-bold text-muted small mb-3">Productos</h6>
+          <table class="table table-sm">
+            <thead class="table-light">
+              <tr>
+                <th class="text-uppercase small">Producto</th>
+                <th class="text-uppercase small text-center">Cant.</th>
+                <th class="text-uppercase small text-end">P. Unit.</th>
+                <th class="text-uppercase small text-end">Subtotal</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of items">
+                <td>{{ item.producto.nombre }}</td>
+                <td class="text-center">{{ item.cantidad }}</td>
+                <td class="text-end">S/ {{ item.producto.precioSoles.toFixed(2) }}</td>
+                <td class="text-end">S/ {{ item.subtotalSoles.toFixed(2) }}</td>
+              </tr>
+              <tr *ngIf="tipoEntrega === 'delivery'">
+                <td colspan="3">Delivery</td>
+                <td class="text-end fw-semibold" style="color: #d4af37;">S/ {{ costoDelivery.toFixed(2) }}</td>
+              </tr>
+            </tbody>
+            <tfoot class="table-light border-top border-2">
+              <tr class="fw-bold" style="color: #d4af37;">
+                <td colspan="3" class="text-end">Total (Soles)</td>
+                <td class="text-end fs-5">S/ {{ totalFinal.toFixed(2) }}</td>
+              </tr>
+              <tr class="text-muted">
+                <td colspan="3" class="text-end small">Total (Dólares)</td>
+                <td class="text-end small">$ {{ totalFinalDolares.toFixed(2) }}</td>
+              </tr>
+            </tfoot>
+          </table>
+          <div class="text-center small text-muted mt-3">
+            Tipo de cambio: S/ {{ tipoCambioActual.toFixed(3) }} = $ 1.00
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center pt-4 mt-4 border-top">
+          <p class="mb-1 text-muted">¡Gracias por tu compra!</p>
+          <p class="mb-0 text-muted small">Cronos - Sabores que conquistan</p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Botones después de comprar -->
+    <div class="d-flex gap-3 justify-content-center mt-4 no-print" *ngIf="compraRealizada">
+      <button class="btn btn-outline-dark px-4 py-2" (click)="volverAProductos()">
+        Volver a Productos
+      </button>
+      <button class="btn px-4 py-2" style="background: linear-gradient(135deg, #d4af37, #f4c430); color: #2c2c2c; font-weight: 700;" (click)="imprimirBoleta()">
+        Descargar {{ tipoComprobante === 'boleta' ? 'Boleta' : 'Factura' }}
+      </button>
     </div>
 
   </div>

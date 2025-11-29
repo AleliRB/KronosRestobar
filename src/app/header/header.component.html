@@ -6,21 +6,21 @@
 
     <!-- LOGO + NOMBRE (CENTRADO) -->
     <a class="navbar-brand mx-auto text-center" routerLink="/">
-      <i class="fas fa-hamburger me-2"></i>
-      <span class="fs-3 fw-bold">BurgerIca</span>
+      <i class="fas fa-clock me-2"></i>
+      <span class="fs-3 fw-bold">Cronos</span>
     </a>
 
     <!-- LÍNEA DECORATIVA INFERIOR -->
     <div style="width:300px; height: 2px; background-color: #ffffffaa;" class="mx-auto mt-1 mb-2"></div>
 
-    <!-- FILA INFERIOR: MENÚ CENTRADO + LOGIN/REGISTRO -->
-    <div class="d-flex w-100 align-items-center">
+    <!-- FILA INFERIOR: MENÚ CENTRADO + CARRITO/USUARIO -->
+    <div class="d-flex w-100 align-items-center justify-content-between">
 
-      <!-- Columna izquierda vacía (equilibrio) -->
-      <div style="width: 180px;"></div>
+      <!-- Espacio izquierdo vacío para balance -->
+      <div style="min-width: 180px;"></div>
 
-      <!-- MENÚ REALMENTE CENTRADO -->
-      <ul class="navbar-nav d-flex flex-row gap-2 mx-auto text-center">
+      <!-- MENÚ CENTRAL -->
+      <ul class="navbar-nav d-flex flex-row gap-2 mx-auto">
         <!-- Menús para todos -->
         <li class="nav-item">
           <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
@@ -46,23 +46,22 @@
         </li>
       </ul>
 
-      <!-- Carrito y Usuario -->
-      <ul class="navbar-nav">
+      <!-- CARRITO + USUARIO/LOGIN (DERECHA) -->
+      <div class="d-flex align-items-center gap-3" style="min-width: 180px; justify-content: flex-end;">
+        
         <!-- Carrito -->
-        <li class="nav-item">
-          <a class="nav-link position-relative" routerLink="/carrito">
-            <i class="fas fa-shopping-cart fa-lg"></i>
-            <span class="badge bg-warning text-dark position-absolute top-0 start-100 translate-middle" *ngIf="cantidadCarrito > 0">
-              {{ cantidadCarrito }}
-            </span>
-          </a>
-        </li>
+        <a class="nav-link position-relative p-0" routerLink="/carrito">
+          <i class="fas fa-shopping-cart fa-lg"></i>
+          <span class="badge bg-warning text-dark position-absolute top-0 start-100 translate-middle" *ngIf="cantidadCarrito > 0">
+            {{ cantidadCarrito }}
+          </span>
+        </a>
 
-        <!-- Usuario autenticado -->
-        <li class="nav-item dropdown" *ngIf="estaAutenticado()">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-            <i class="fas fa-user-circle fa-lg me-1"></i>
-            {{ usuarioActual?.nombres }}
+        <!-- SI ESTÁ AUTENTICADO: Dropdown Usuario -->
+        <div class="dropdown" *ngIf="estaAutenticado()">
+          <a class="nav-link dropdown-toggle d-flex align-items-center p-0" href="#" role="button" data-bs-toggle="dropdown">
+            <i class="fas fa-user-circle fa-lg me-2"></i>
+            <span>{{ usuarioActual?.nombres }}</span>
             <span class="badge bg-warning text-dark ms-2" *ngIf="esAdmin()">
               <i class="fas fa-crown me-1"></i>ADMIN
             </span>
@@ -82,17 +81,18 @@
               </a>
             </li>
           </ul>
-        </li>
-      </ul>
+        </div>
 
-      <!-- LOGIN / REGISTRO A LA DERECHA -->
-      <div class="d-flex align-items-center justify-content-end">
-        <a class="nav-link text-white" routerLink="/login">
-          <i class="fas fa-sign-in-alt me-1"></i> Login
-        </a>
-        <a class="btn btn-outline-light btn-sm ms-2" routerLink="/registro">
-          Registro
-        </a>
+        <!-- SI NO ESTÁ AUTENTICADO: Login + Registro -->
+        <div class="d-flex align-items-center gap-2" *ngIf="!estaAutenticado()">
+          <a class="nav-link p-0" routerLink="/login">
+            <i class="fas fa-sign-in-alt me-1"></i> Login
+          </a>
+          <a class="btn btn-outline-light btn-sm px-3" routerLink="/registro">
+            Registro
+          </a>
+        </div>
+
       </div>
     </div>
   </div>

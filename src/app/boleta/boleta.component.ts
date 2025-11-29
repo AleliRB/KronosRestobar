@@ -316,9 +316,9 @@ export class BoletaComponent implements OnInit, OnDestroy {
     
     // Header con logo y datos de la empresa
     doc.setFontSize(26);
-    doc.setTextColor(139, 0, 0);
+    doc.setTextColor(212, 175, 55);
     doc.setFont('helvetica', 'bold');
-    doc.text('BurgerIca', pageWidth / 2, 20, { align: 'center' });
+    doc.text('Cronos', pageWidth / 2, 20, { align: 'center' });
     
     doc.setFontSize(9);
     doc.setTextColor(80);
@@ -334,7 +334,7 @@ export class BoletaComponent implements OnInit, OnDestroy {
     doc.setFontSize(18);
     doc.setTextColor(0);
     doc.setFont('helvetica', 'bold');
-    const tituloComprobante = this.tipoComprobante === 'boleta' ? 'BOLETA DE VENTA' : 'FACTURA DE VENTA ELECTRÓNICA';
+    const tituloComprobante = this.tipoComprobante === 'boleta' ? 'BOLETA DE VENTA ELECTRÓNICA' : 'FACTURA DE VENTA ELECTRÓNICA';
     doc.text(tituloComprobante, pageWidth / 2, 45, { align: 'center' });
     
     doc.setFontSize(10);
@@ -445,7 +445,7 @@ export class BoletaComponent implements OnInit, OnDestroy {
       body: productosData,
       theme: 'grid',
       headStyles: {
-        fillColor: [139, 0, 0],
+        fillColor: [212, 175, 55],
         textColor: 255,
         fontStyle: 'bold',
         halign: 'center'
@@ -462,7 +462,7 @@ export class BoletaComponent implements OnInit, OnDestroy {
       },
       foot: [[
         { content: 'TOTAL:', colSpan: 3, styles: { halign: 'right', fontStyle: 'bold', fontSize: 12 } },
-        { content: `S/ ${this.totalFinal.toFixed(2)}`, styles: { textColor: [139, 0, 0], fontStyle: 'bold', fontSize: 12, halign: 'right' } }
+        { content: `S/ ${this.totalFinal.toFixed(2)}`, styles: { textColor: [212, 175, 55], fontStyle: 'bold', fontSize: 12, halign: 'right' } }
       ]],
       footStyles: {
         fillColor: [240, 240, 240],
@@ -488,7 +488,7 @@ export class BoletaComponent implements OnInit, OnDestroy {
     
     doc.setFontSize(9);
     doc.setFont('helvetica', 'normal');
-    doc.text('BurgerIca - Sabores que conquistan', pageWidth / 2, finalY + 23, { align: 'center' });
+    doc.text('Cronos - Sabores que conquistan', pageWidth / 2, finalY + 23, { align: 'center' });
     
     // Guardar con nombre dinámico según tipo
     const nombreArchivo = this.tipoComprobante === 'boleta' ? 'Boleta' : 'Factura';
